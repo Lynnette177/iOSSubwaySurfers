@@ -1,0 +1,10 @@
+Package: com.lynnette.subwaysuck
+Name: SubwaySuck Mod Menu
+Depends: mobilesubstrate
+Version: 0.1
+Architecture: iphoneos-arm
+Description: SubwaySuck Mod Menu by Lynnette!
+Maintainer: Lynnette
+Author: Lynnette
+Section: Tweaks
+Homepage: note.lynnette.uk

@@ -17,8 +17,22 @@ void setup() {
       ENCRYPTOFFSET(offset_SubwayAdManager__VideoFailed)//上下可以一同写多个
     }
     bytes: {
-      ENCRYPTHEX("C8 FF FF 17")
+      ENCRYPTHEX("C8 FF FF 17")//这里是跳转到finish的位置
     }
+  ];
+  [switches addOffsetSwitch:NSSENCRYPT("无视碰撞")
+    description:NSSENCRYPT("开启后无视碰撞")
+    offsets: {
+      ENCRYPTOFFSET(offset_SYBO_Subway_Utilities_DebugSettings__get_IsAllowed),//上下可以一同写多个
+      ENCRYPTOFFSET(offset_SYBO_Subway_Utilities_DebugSettings__get_CharacterInvincible)
+    }
+    bytes: {
+      ENCRYPTHEX("20 00 80 52 C0 03 5F D6"),
+      ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
+    }
+  ];
+  [switches addSwitch:NSSENCRYPT("上帝视角")
+    description:NSSENCRYPT("开启后俯视赛道")
   ];
   [switches addOffsetSwitch:NSSENCRYPT("强开炫跑卡")
     description:NSSENCRYPT("开启后本地强制启用炫跑卡")
@@ -113,6 +127,12 @@ void setup() {
     description:NSSENCRYPT("当分数发生变化的时候，会修改分数。")
     minimumValue:1
     maximumValue:300000
+    sliderColor:UIColorFromHex(0xBD0000)
+  ];
+  [switches addSliderSwitch:NSSENCRYPT("修改模型大小")
+    description:NSSENCRYPT("开启后当游戏重新加载人物模型的时候，将改变其大小")
+    minimumValue:0.1
+    maximumValue:10
     sliderColor:UIColorFromHex(0xBD0000)
   ];
 }
@@ -220,7 +240,10 @@ bool InstallHooks(){
     MSHookFunction((void*)hookFunctionAddress::HPowerupEnergy___TriggerIn_Address, (void*)hooks::new_HPowerupEnergy___TriggerIn, (void**)&hooks::org_HPowerupEnergy___TriggerIn);
     hookFunctionAddress::HCharSpeed___ChangeState_Address += UnityFrameworkBaseAddr;
     MSHookFunction((void*)hookFunctionAddress::HCharSpeed___ChangeState_Address, (void*)hooks::new_HCharSpeed___ChangeState, (void**)&hooks::org_HCharSpeed___ChangeState);
-
+    hookFunctionAddress::CharacterModel__GetScale_Address += UnityFrameworkBaseAddr;
+    MSHookFunction((void*)hookFunctionAddress::CharacterModel__GetScale_Address, (void*)hooks::new_CharacterModel__GetScale, (void**)&hooks::org_CharacterModel__GetScale);
+    hookFunctionAddress::UnityEngine_Transform__set_position_Address += UnityFrameworkBaseAddr;
+    MSHookFunction((void*)hookFunctionAddress::UnityEngine_Transform__set_position_Address, (void*)hooks::new_UnityEngine_Transform__set_position, (void**)&hooks::org_UnityEngine_Transform__set_position);
     return true;
   }
   return false;

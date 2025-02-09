@@ -15,7 +15,8 @@
   /opt/theos/vendor/include/substrate.h \
   /opt/theos/vendor/lib/CydiaSubstrate.framework/Modules/module.modulemap \
   /opt/theos/vendor/lib/CydiaSubstrate.framework/Headers/CydiaSubstrate.h \
-  /Users/lynnette/tweaks/SubwaySuck/Ted2-Mod-Menu-Template.v1.0.1.nic/offsets.hpp
+  /Users/lynnette/tweaks/SubwaySuck/Ted2-Mod-Menu-Template.v1.0.1.nic/offsets.hpp \
+  /Users/lynnette/tweaks/SubwaySuck/Ted2-Mod-Menu-Template.v1.0.1.nic/GameStructs.h
 /opt/theos/Prefix.pch:
 /Users/lynnette/tweaks/SubwaySuck/Ted2-Mod-Menu-Template.v1.0.1.nic/Macros.h:
 /Users/lynnette/tweaks/SubwaySuck/Ted2-Mod-Menu-Template.v1.0.1.nic/Menu.h:
@@ -32,3 +33,4 @@
 /opt/theos/vendor/lib/CydiaSubstrate.framework/Modules/module.modulemap:
 /opt/theos/vendor/lib/CydiaSubstrate.framework/Headers/CydiaSubstrate.h:
 /Users/lynnette/tweaks/SubwaySuck/Ted2-Mod-Menu-Template.v1.0.1.nic/offsets.hpp:
+/Users/lynnette/tweaks/SubwaySuck/Ted2-Mod-Menu-Template.v1.0.1.nic/GameStructs.h:

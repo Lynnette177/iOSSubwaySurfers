@@ -10,25 +10,16 @@ bool InstallHooks();
   INSIDE THE FUNCTION BELOW YOU'LL HAVE TO ADD YOUR SWITCHES!
 ***********************************************************/
 void setup() {
-
-  //patching offsets directly, without switch
-  //patchOffset(ENCRYPTOFFSET("0x6BE3A08"), ENCRYPTHEX("00 00 80 D2 C0 03 5F D6"));
-  //patchOffset(ENCRYPTOFFSET("0x10020D2D4"), ENCRYPTHEX("0x00008052C0035FD6"));
-
-  // You can write as many bytes as you want to an offset
-  //patchOffset(ENCRYPTOFFSET("0x10020D3A8"), ENCRYPTHEX("0x00F0271E0008201EC0035FD6"));
-  // or  
-  //patchOffset(ENCRYPTOFFSET("0x10020D3A8"), ENCRYPTHEX("00F0271E0008201EC0035FD6"));
-  // spaces are fine too
-  //patchOffset(ENCRYPTOFFSET("0x10020D3A8"), ENCRYPTHEX("00 F0 27 1E 00 08 20 1E C0 03 5F D6"));
-
-  patchOffset(ENCRYPTOFFSET("0x286D9D8"), ENCRYPTHEX("C0 03 5F D6"));//禁用货币反作弊CheatDetectorManager__CurrencyCheatDetect
-  patchOffset(ENCRYPTOFFSET("0x286D224"), ENCRYPTHEX("C0 03 5F D6"));//禁用CheatDetectorManager__ObscuredDetectorCallback
-  patchOffset(ENCRYPTOFFSET("0x286D91C"), ENCRYPTHEX("C0 03 5F D6"));//禁用CheatDetectorManager__SpeedHackDetectorCallback
-  patchOffset(ENCRYPTOFFSET("0x286D504"), ENCRYPTHEX("C0 03 5F D6"));//禁用CheatDetectorManager__ShieldUser
-  patchOffset(ENCRYPTOFFSET("0x2E83464"), ENCRYPTHEX("C0 03 5F D6"));//禁用FrontScreen__UploadCheaterPlayerLog
-
-  // Empty switch - usefull with hooking
+  
+  [switches addOffsetSwitch:NSSENCRYPT("广告退出即奖励")
+    description:NSSENCRYPT("开启后看广告弹窗后退出，即可获得奖励")
+    offsets: {
+      ENCRYPTOFFSET(offset_SubwayAdManager__VideoFailed)//上下可以一同写多个
+    }
+    bytes: {
+      ENCRYPTHEX("C8 FF FF 17")
+    }
+  ];
   [switches addOffsetSwitch:NSSENCRYPT("强开炫跑卡")
     description:NSSENCRYPT("开启后本地强制启用炫跑卡")
     offsets: {
@@ -112,6 +103,12 @@ void setup() {
     maximumValue:9999
     sliderColor:UIColorFromHex(0xBD0000)
   ];
+   [switches addSliderSwitch:NSSENCRYPT("修改宝物钥匙")
+    description:NSSENCRYPT("开启后当金币数量发生变化的时候将连带修改宝物钥匙")
+    minimumValue:1
+    maximumValue:9999
+    sliderColor:UIColorFromHex(0xBD0000)
+  ];
   [switches addSliderSwitch:NSSENCRYPT("修改分数")
     description:NSSENCRYPT("当分数发生变化的时候，会修改分数。")
     minimumValue:1
@@ -139,7 +136,6 @@ void setupMenu() {
   // If a game uses a framework as base executable, you can enter the name here.
   // For example: UnityFramework, in that case you have to replace NULL with "UnityFramework" (note the quotes)
   while(!InstallHooks()){}//在这里拿到UnityFramework基地址，确保加载过了
-  [menu setFrameworkName:"UnityFramework"];
 
   menu = [[Menu alloc]  
             initWithTitle:NSSENCRYPT("SubwaySuck - Mod Menu")
@@ -166,7 +162,8 @@ void setupMenu() {
 
 // If the menu button doesn't show up; Change the timer to a bigger amount.
 static void didFinishLaunching(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef info) {
-  timer(5) {
+    Initialize();
+    timer(5) {
     SCLAlertView *alert = [[SCLAlertView alloc] initWithNewWindow];
 
     // Website link, remove it if you don't need it.
@@ -188,7 +185,7 @@ static void didFinishLaunching(CFNotificationCenterRef center, void *observer, C
     alert.showAnimationType = SCLAlertViewShowAnimationSlideInFromCenter;   
     
     [alert showSuccess: nil
-            subTitle:NSSENCRYPT("SubwaySuck Mod Menu.\n作者：Lynnette177\n请勿在未经允许的情况下分享\n游戏反作弊已被关闭\nEnjoy!") 
+            subTitle:NSSENCRYPT("SubwaySuck Mod Menu.\n作者：Lynnette177\n请勿在未经允许的情况下分享\n游戏反作弊已被关闭\n开屏广告已移除\nEnjoy!") 
               closeButtonTitle:nil
                 duration:99999999.0f];
   });

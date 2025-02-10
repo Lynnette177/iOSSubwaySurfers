@@ -5,7 +5,8 @@
 //  Created by Joey on 3/14/19.
 //  Copyright © 2019 Joey. All rights reserved.
 //
-
+#include "../hooks/hooks.h"
+#include "../Utils/definations.h"
 #import "UIKit/UIKit.h"
 #import "KittyMemory/MemoryPatch.hpp"
 #import "SCLAlertView/SCLAlertView.h"
@@ -43,6 +44,8 @@
 -(NSString *)getPreferencesKey;
 -(NSString *)getDescription;
 - (std::vector<MemoryPatch>)getMemoryPatches;
+- (std::vector<uint64_t>)getoffsets;
+- (std::vector<std::string>)getbytes;
 
 
 @end

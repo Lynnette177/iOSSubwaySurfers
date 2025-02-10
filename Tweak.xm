@@ -1,109 +1,110 @@
-#import "Macros.h"
+#import "Utils/Macros.h"
 #include <cstdbool>
 #include <cstdint>
 #include <Foundation/Foundation.h>
 #import <substrate.h>
 #import <mach-o/dyld.h>
-#import "offsets.hpp"
-bool InstallHooks();
+#import "Games/init.hpp"
+
 /***********************************************************
   INSIDE THE FUNCTION BELOW YOU'LL HAVE TO ADD YOUR SWITCHES!
 ***********************************************************/
 void setup() {
+  [switches addSwitch:NSSENCRYPT("上帝视角")
+    description:NSSENCRYPT("开启后俯视赛道")
+  ];
   
   [switches addOffsetSwitch:NSSENCRYPT("广告退出即奖励")
     description:NSSENCRYPT("开启后看广告弹窗后退出，即可获得奖励")
     offsets: {
-      ENCRYPTOFFSET(offset_SubwayAdManager__VideoFailed)//上下可以一同写多个
+      offset_SubwayAdManager__VideoFailed//上下可以一同写多个
     }
     bytes: {
-      ENCRYPTHEX("C8 FF FF 17")//这里是跳转到finish的位置
+      PATCH_FROM_FAILED_TO_FINSH_ADS
     }
   ];
   [switches addOffsetSwitch:NSSENCRYPT("无视碰撞")
     description:NSSENCRYPT("开启后无视碰撞")
     offsets: {
-      ENCRYPTOFFSET(offset_SYBO_Subway_Utilities_DebugSettings__get_IsAllowed),//上下可以一同写多个
-      ENCRYPTOFFSET(offset_SYBO_Subway_Utilities_DebugSettings__get_CharacterInvincible)
+      offset_SYBO_Subway_Utilities_DebugSettings__get_IsAllowed,//上下可以一同写多个
+      offset_SYBO_Subway_Utilities_DebugSettings__get_CharacterInvincible
     }
     bytes: {
-      ENCRYPTHEX("20 00 80 52 C0 03 5F D6"),
-      ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
+      PATCH_RET1,
+      PATCH_RET1
     }
-  ];
-  [switches addSwitch:NSSENCRYPT("上帝视角")
-    description:NSSENCRYPT("开启后俯视赛道")
   ];
   [switches addOffsetSwitch:NSSENCRYPT("强开炫跑卡")
     description:NSSENCRYPT("开启后本地强制启用炫跑卡")
     offsets: {
-      ENCRYPTOFFSET(offset_SuperRunVIPManager__IsActive)//上下可以一同写多个
+      offset_SuperRunVIPManager__IsActive//上下可以一同写多个
     }
     bytes: {
-      ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
+      PATCH_RET1
     }
   ];
   [switches addOffsetSwitch:NSSENCRYPT("解锁所有角色")//IDreamSky.BagManager$$IsUnlockedCharacter
     description:NSSENCRYPT("开启后解锁全部角色")
     offsets: {
-      ENCRYPTOFFSET(offset_IDreamSky_BagManager$$IsUnlockedCharacter)
+      offset_IDreamSky_BagManager$$IsUnlockedCharacter
     }
     bytes: {
-      ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
+      PATCH_RET1
     }
   ];
   [switches addOffsetSwitch:NSSENCRYPT("解锁所有滑板")//
     description:NSSENCRYPT("开启后解锁全部滑板")
     offsets: {
-      ENCRYPTOFFSET(offset_PlayerInfo__isHoverboardUnlockedm)
+      offset_PlayerInfo__isHoverboardUnlockedm
     }
     bytes: {
-      ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
+      PATCH_RET1
     }
   ];
   [switches addOffsetSwitch:NSSENCRYPT("解锁所有角色主题")//
     description:NSSENCRYPT("开启后解锁全部角色主题")
     offsets: {
-      ENCRYPTOFFSET(offset_IDreamSky_BagManager__IsUnlockedCharacterTheme)
+      offset_IDreamSky_BagManager__IsUnlockedCharacterTheme
     }
     bytes: {
-      ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
+      PATCH_RET1
     }
   ];
   [switches addOffsetSwitch:NSSENCRYPT("解锁所有Sticker")//
     description:NSSENCRYPT("开启后解锁全部Sticker")
     offsets: {
-      ENCRYPTOFFSET(offset_CharacterStickerManager__isCharacterUnlocked)
+      offset_CharacterStickerManager__isCharacterUnlocked
     }
     bytes: {
-      ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
+      PATCH_RET1
     }
   ];
   [switches addOffsetSwitch:NSSENCRYPT("解锁所有装饰")//
     description:NSSENCRYPT("开启后解锁全部装饰")
     offsets: {
-      ENCRYPTOFFSET(offset_PlayerInfo__IsOrnamentUnlocked)
+      offset_PlayerInfo__IsOrnamentUnlocked
     }
     bytes: {
-      ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
+      PATCH_RET1
     }
   ];
-
+  [switches addOffsetSwitch:NSSENCRYPT("PVP无视道具")//
+    description:NSSENCRYPT("开启后PVP不会受到其他玩家减速道具的影响")
+    offsets: {
+      offset_HPFXBase___DefenseCheck
+    }
+    bytes: {
+      PATCH_RET1
+    }
+  ];
+  
   [switches addSwitch:NSSENCRYPT("PVP双倍滑板能量")
     description:NSSENCRYPT("道具赛收集到的能量翻倍")
   ];
   [switches addSwitch:NSSENCRYPT("PVP疯狂加速")
     description:NSSENCRYPT("道具赛开启后可以无视碰撞。无论是碰撞还是减速带都会变成最高等级的加速。")
   ];
-  [switches addOffsetSwitch:NSSENCRYPT("PVP无视道具")//
-    description:NSSENCRYPT("开启后PVP不会受到其他玩家减速道具的影响")
-    offsets: {
-      ENCRYPTOFFSET(offset_HPFXBase___DefenseCheck)
-    }
-    bytes: {
-      ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
-    }
-  ];
+  
 
   [switches addSliderSwitch:NSSENCRYPT("修改金币")
     description:NSSENCRYPT("开启后将修改并锁定金币，触发任何导致金币变化的事件即可修改。比如开一把吃两个金币。如果需要修改跑酷币，也要打开这个。")
@@ -155,8 +156,6 @@ void setupMenu() {
 
   // If a game uses a framework as base executable, you can enter the name here.
   // For example: UnityFramework, in that case you have to replace NULL with "UnityFramework" (note the quotes)
-  while(!InstallHooks()){}//在这里拿到UnityFramework基地址，确保加载过了
-
   menu = [[Menu alloc]  
             initWithTitle:NSSENCRYPT("SubwaySuck - Mod Menu")
             titleColor:[UIColor whiteColor]
@@ -182,7 +181,10 @@ void setupMenu() {
 
 // If the menu button doesn't show up; Change the timer to a bigger amount.
 static void didFinishLaunching(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef info) {
-    Initialize();
+  Initialize();
+  while(!InstallHooks()){}//在这里拿到UnityFramework基地址，确保加载过了 
+  patch_at_start(); 
+  //在这里面设置了越狱状态下menu的patch都是patch哪个可执行文件
     timer(5) {
     SCLAlertView *alert = [[SCLAlertView alloc] initWithNewWindow];
 
@@ -205,7 +207,7 @@ static void didFinishLaunching(CFNotificationCenterRef center, void *observer, C
     alert.showAnimationType = SCLAlertViewShowAnimationSlideInFromCenter;   
     
     [alert showSuccess: nil
-            subTitle:NSSENCRYPT("SubwaySuck Mod Menu.\n作者：Lynnette177\n请勿在未经允许的情况下分享\n游戏反作弊已被关闭\n开屏广告已移除\nEnjoy!") 
+            subTitle:NSSENCRYPT("SubwaySuck Mod Menu.\n作者：Lynnette177\n请勿在未经允许的情况下分享\n游戏反作弊已被关闭\nEnjoy!") 
               closeButtonTitle:nil
                 duration:99999999.0f];
   });
@@ -217,37 +219,6 @@ typedef struct {
     int32_t vector[0];  // 这个是数组的起始位置
 } MonoArray;
 
-
-bool InstallHooks(){
-  uintptr_t UnityFrameworkBaseAddr = NULL;
-  uint32_t moduleCount = _dyld_image_count();
-  for (uint32_t i = 0; i<moduleCount; i++){
-    const char* moduleName = _dyld_get_image_name(i);
-    if (strstr(moduleName, "UnityFramework")){
-      UnityFrameworkBaseAddr = (uintptr_t)_dyld_get_image_header(i);
-    }
-  }
-  if (UnityFrameworkBaseAddr){
-    FunctionAddress::initFunctionAddress(UnityFrameworkBaseAddr);
-    GameFunction::initFunctions();
-    hookFunctionAddress::PlayerInfo__set_amountOfCoins_Address += UnityFrameworkBaseAddr;
-    MSHookFunction((void*)hookFunctionAddress::PlayerInfo__set_amountOfCoins_Address, (void*)hooks::new_PlayerInfo__set_amountOfCoins, (void**)&hooks::org_PlayerInfo__set_amountOfCoins);
-    hookFunctionAddress::PlayerInfo__set_amountOfKeys_Address += UnityFrameworkBaseAddr;
-    MSHookFunction((void*)hookFunctionAddress::PlayerInfo__set_amountOfKeys_Address, (void*)hooks::new_PlayerInfo__set_amountOfKeys, (void**)&hooks::org_PlayerInfo__set_amountOfKeys);
-    hookFunctionAddress::GameStats__set_score_Address += UnityFrameworkBaseAddr;
-    MSHookFunction((void*)hookFunctionAddress::GameStats__set_score_Address, (void*)hooks::new_GameStats__set_score, (void**)&hooks::org_GameStats__set_score);
-    hookFunctionAddress::HPowerupEnergy___TriggerIn_Address += UnityFrameworkBaseAddr;
-    MSHookFunction((void*)hookFunctionAddress::HPowerupEnergy___TriggerIn_Address, (void*)hooks::new_HPowerupEnergy___TriggerIn, (void**)&hooks::org_HPowerupEnergy___TriggerIn);
-    hookFunctionAddress::HCharSpeed___ChangeState_Address += UnityFrameworkBaseAddr;
-    MSHookFunction((void*)hookFunctionAddress::HCharSpeed___ChangeState_Address, (void*)hooks::new_HCharSpeed___ChangeState, (void**)&hooks::org_HCharSpeed___ChangeState);
-    hookFunctionAddress::CharacterModel__GetScale_Address += UnityFrameworkBaseAddr;
-    MSHookFunction((void*)hookFunctionAddress::CharacterModel__GetScale_Address, (void*)hooks::new_CharacterModel__GetScale, (void**)&hooks::org_CharacterModel__GetScale);
-    hookFunctionAddress::UnityEngine_Transform__set_position_Address += UnityFrameworkBaseAddr;
-    MSHookFunction((void*)hookFunctionAddress::UnityEngine_Transform__set_position_Address, (void*)hooks::new_UnityEngine_Transform__set_position, (void**)&hooks::org_UnityEngine_Transform__set_position);
-    return true;
-  }
-  return false;
-}
 
 %ctor {
   CFNotificationCenterAddObserver(CFNotificationCenterGetLocalCenter(), NULL, &didFinishLaunching, (CFStringRef)UIApplicationDidFinishLaunchingNotification, NULL, CFNotificationSuspensionBehaviorDeliverImmediately);

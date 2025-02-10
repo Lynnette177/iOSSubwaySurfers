@@ -1,58 +1,28 @@
+#pragma once
 #include "GameStructs.h"
-#import "Macros.h"
+#import "../Utils/Macros.h"
 #include <__config>
 #include <cstdint>
 
-#define offset_SuperRunVIPManager__IsActive "0x24BB334"
-#define offset_IDreamSky_BagManager$$IsUnlockedCharacter "0x3065DF8"
-#define offset_PlayerInfo__isHoverboardUnlockedm "0x1FBF558"
-#define offset_IDreamSky_BagManager__IsUnlockedCharacterTheme "0x30660F8"
-#define offset_CharacterStickerManager__isCharacterUnlocked "0x250D6D0"
-#define offset_PlayerInfo__IsOrnamentUnlocked "0x1FE5018"
-#define offset_HPFXBase___DefenseCheck "0x2F4BD4C"
-#define offset_SubwayAdManager__VideoFailed "0x24AE11C"
-#define offset_SYBO_Subway_Utilities_DebugSettings__get_IsAllowed "0x2342988"
+#define offset_SuperRunVIPManager__IsActive ENCRYPTOFFSET("0x24BB334")
+#define offset_IDreamSky_BagManager$$IsUnlockedCharacter ENCRYPTOFFSET("0x3065DF8")
+#define offset_PlayerInfo__isHoverboardUnlockedm ENCRYPTOFFSET("0x1FBF558")
+#define offset_IDreamSky_BagManager__IsUnlockedCharacterTheme ENCRYPTOFFSET("0x30660F8")
+#define offset_CharacterStickerManager__isCharacterUnlocked ENCRYPTOFFSET("0x250D6D0")
+#define offset_PlayerInfo__IsOrnamentUnlocked ENCRYPTOFFSET("0x1FE5018")
+#define offset_HPFXBase___DefenseCheck ENCRYPTOFFSET("0x2F4BD4C")
+#define offset_SubwayAdManager__VideoFailed ENCRYPTOFFSET("0x24AE11C")
+#define offset_SYBO_Subway_Utilities_DebugSettings__get_IsAllowed ENCRYPTOFFSET("0x2342988")
 #define offset_SYBO_Subway_Utilities_DebugSettings__get_CharacterInvincible    \
-  "0x2342B74"
+  ENCRYPTOFFSET("0x2342B74")
 
-void Initialize() {
-  [menu setFrameworkName:"UnityFramework"];
-  patchOffset(
-      ENCRYPTOFFSET("0x24AE224"),
-      ENCRYPTHEX(
-          "00 00 80 D2 C0 03 5F D6")); // 移除SubwayAdManager__ShowSplashAd
-  patchOffset(
-      ENCRYPTOFFSET("0x24AE448"),
-      ENCRYPTHEX(
-          "20 00 80 52 C0 03 5F D6")); // 移除SubwayAdManager__ShowSplashAdClosed
-  patchOffset(
-      ENCRYPTOFFSET("0x286D9D8"),
-      ENCRYPTHEX(
-          "C0 03 5F D6")); // 禁用货币反作弊CheatDetectorManager__CurrencyCheatDetect
-  patchOffset(
-      ENCRYPTOFFSET("0x286D224"),
-      ENCRYPTHEX(
-          "C0 03 5F D6")); // 禁用CheatDetectorManager__ObscuredDetectorCallback
-  patchOffset(
-      ENCRYPTOFFSET("0x286D91C"),
-      ENCRYPTHEX(
-          "C0 03 5F D6")); // 禁用CheatDetectorManager__SpeedHackDetectorCallback
-  patchOffset(
-      ENCRYPTOFFSET("0x286D504"),
-      ENCRYPTHEX("C0 03 5F D6")); // 禁用CheatDetectorManager__ShieldUser
-  patchOffset(
-      ENCRYPTOFFSET("0x2E83464"),
-      ENCRYPTHEX("C0 03 5F D6")); // 禁用FrontScreen__UploadCheaterPlayerLog
-}
-namespace hookFunctionAddress {
-static uintptr_t PlayerInfo__set_amountOfCoins_Address = 0x1FABA74;
-static uintptr_t PlayerInfo__set_amountOfKeys_Address = 0x1FABD88;
-static uintptr_t GameStats__set_score_Address = 0x2EF197C;
-static uintptr_t HPowerupEnergy___TriggerIn_Address = 0x2F6B370;
-static uintptr_t HCharSpeed___ChangeState_Address = 0x2F348D8;
-static uintptr_t CharacterModel__GetScale_Address = 0x22bd2bc;
-static uintptr_t UnityEngine_Transform__set_position_Address = 0x435722C;
-} // namespace hookFunctionAddress
+#define hookFunctionAddress_PlayerInfo__set_amountOfCoins_Address  ENCRYPTOFFSET("0x1FABA74")
+#define hookFunctionAddress_PlayerInfo__set_amountOfKeys_Address  ENCRYPTOFFSET("0x1FABD88")
+#define hookFunctionAddress_GameStats__set_score_Address  ENCRYPTOFFSET("0x2EF197C")
+#define hookFunctionAddress_HPowerupEnergy___TriggerIn_Address  ENCRYPTOFFSET("0x2F6B370")
+#define hookFunctionAddress_HCharSpeed___ChangeState_Address  ENCRYPTOFFSET("0x2F348D8")
+#define hookFunctionAddress_CharacterModel__GetScale_Address  ENCRYPTOFFSET("0x22bd2bc")
+#define hookFunctionAddress_UnityEngine_Transform__set_position_Address  ENCRYPTOFFSET("0x435722C")
 
 namespace FunctionAddress {
 static uintptr_t HPowerupManager__get_instance_funcaddr = 0x2F5747C;

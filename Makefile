@@ -1,5 +1,5 @@
-#THEOS_DEVICE_IP = 192.168.123.128
-THEOS_DEVICE_IP = 192.168.2.175 # install to device from pc
+THEOS_DEVICE_IP = 192.168.123.128
+#THEOS_DEVICE_IP = 192.168.2.175 # install to device from pc
 ARCHS = arm64 #arm64e
 DEBUG = 0
 FINALPACKAGE = 1
@@ -39,7 +39,8 @@ PROJ_COMMON_FRAMEWORKS = UIKit Foundation Security QuartzCore CoreGraphics CoreT
 KITTYMEMORY_SRC = $(wildcard KittyMemory/*.cpp)
 SCLALERTVIEW_SRC =  $(wildcard SCLAlertView/*.m)
 HOOKS_SRC = $(wildcard hooks/*.mm)
-MENU_SRC = $(wildcard Menu/*.mm)
+MENU_SRC = $(wildcard Menu/*.mm) $(wildcard Menu/*.xm)
+IMGUI_SRC = $(wildcard ImGui/*.mm) $(wildcard ImGui/*.cpp)
 
 include $(THEOS)/makefiles/common.mk
 
@@ -54,7 +55,7 @@ ifeq ($(IGNORE_WARNINGS),1)
 endif
 
 
-SubwaySuck_FILES = Tweak.xm $(MENU_SRC) $(KITTYMEMORY_SRC) $(SCLALERTVIEW_SRC) $(HOOKS_SRC)
+SubwaySuck_FILES = Tweak.xm $(MENU_SRC) $(KITTYMEMORY_SRC) $(SCLALERTVIEW_SRC) $(HOOKS_SRC) $(IMGUI_SRC)
 
 SubwaySuck_LIBRARIES += substrate
 SubwaySuck_LDFLAGS += -L./

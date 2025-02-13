@@ -1,46 +1,98 @@
 #pragma once
-#include "GameStructs.h"
+#include "../Config/Config.h"
 #import "../Utils/Macros.h"
+#include "GameStructs.h"
 #include <__config>
 #include <cstdint>
+#include <string>
 
 #define offset_SuperRunVIPManager__IsActive ENCRYPTOFFSET("0x24BB334")
-#define offset_IDreamSky_BagManager$$IsUnlockedCharacter ENCRYPTOFFSET("0x3065DF8")
+#define offset_IDreamSky_BagManager$$IsUnlockedCharacter                       \
+  ENCRYPTOFFSET("0x3065DF8")
 #define offset_PlayerInfo__isHoverboardUnlockedm ENCRYPTOFFSET("0x1FBF558")
-#define offset_IDreamSky_BagManager__IsUnlockedCharacterTheme ENCRYPTOFFSET("0x30660F8")
-#define offset_CharacterStickerManager__isCharacterUnlocked ENCRYPTOFFSET("0x250D6D0")
+#define offset_IDreamSky_BagManager__IsUnlockedCharacterTheme                  \
+  ENCRYPTOFFSET("0x30660F8")
+#define offset_CharacterStickerManager__isCharacterUnlocked                    \
+  ENCRYPTOFFSET("0x250D6D0")
 #define offset_PlayerInfo__IsOrnamentUnlocked ENCRYPTOFFSET("0x1FE5018")
 #define offset_HPFXBase___DefenseCheck ENCRYPTOFFSET("0x2F4BD4C")
 #define offset_SubwayAdManager__VideoFailed ENCRYPTOFFSET("0x24AE11C")
-#define offset_SYBO_Subway_Utilities_DebugSettings__get_IsAllowed ENCRYPTOFFSET("0x2342988")
+#define offset_SYBO_Subway_Utilities_DebugSettings__get_IsAllowed              \
+  ENCRYPTOFFSET("0x2342988")
 #define offset_SYBO_Subway_Utilities_DebugSettings__get_CharacterInvincible    \
   ENCRYPTOFFSET("0x2342B74")
+#define offset_AntiAddictionManager_HasVerifid ENCRYPTOFFSET("0x2EA0058")
 
-#define hookFunctionAddress_PlayerInfo__set_amountOfCoins_Address  ENCRYPTOFFSET("0x1FABA74")
-#define hookFunctionAddress_PlayerInfo__set_amountOfKeys_Address  ENCRYPTOFFSET("0x1FABD88")
-#define hookFunctionAddress_GameStats__set_score_Address  ENCRYPTOFFSET("0x2EF197C")
-#define hookFunctionAddress_HPowerupEnergy___TriggerIn_Address  ENCRYPTOFFSET("0x2F6B370")
-#define hookFunctionAddress_HCharSpeed___ChangeState_Address  ENCRYPTOFFSET("0x2F348D8")
-#define hookFunctionAddress_CharacterModel__GetScale_Address  ENCRYPTOFFSET("0x22bd2bc")
-#define hookFunctionAddress_UnityEngine_Transform__set_position_Address  ENCRYPTOFFSET("0x435722C")
+#define hookFunctionAddress_PlayerInfo__set_amountOfCoins_Address              \
+  ENCRYPTOFFSET("0x1FABA74")
+#define hookFunctionAddress_PlayerInfo__set_amountOfKeys_Address               \
+  ENCRYPTOFFSET("0x1FABD88")
+#define hookFunctionAddress_GameStats__set_score_Address                       \
+  ENCRYPTOFFSET("0x2EF197C")
+#define hookFunctionAddress_HPowerupEnergy___TriggerIn_Address                 \
+  ENCRYPTOFFSET("0x2F6B370")
+#define hookFunctionAddress_HCharSpeed___ChangeState_Address                   \
+  ENCRYPTOFFSET("0x2F348D8")
+#define hookFunctionAddress_HCharSpeed__get_speed ENCRYPTOFFSET("0x2F3451C")
+#define hookFunctionAddress_CharacterModel__GetScale_Address                   \
+  ENCRYPTOFFSET("0x22bd2bc")
+#define hookFunctionAddress_UnityEngine_Transform__set_position_Address        \
+  ENCRYPTOFFSET("0x435722C")
+#define hookFunctionAddress_HRealPVPRoomManager__CommitGameChat_Address        \
+  ENCRYPTOFFSET("0x2F8C5DC")
+#define hookFunctionAddress_SYBO_Subway_Characters_Character__ApplyGravity     \
+  ENCRYPTOFFSET("0x224154C")
+#define hookFunctionAddress_PlayerInfo__get_playerNickName                     \
+  ENCRYPTOFFSET("0x1FC77D8")
 
 namespace FunctionAddress {
-static uintptr_t HPowerupManager__get_instance_funcaddr = 0x2F5747C;
-static uintptr_t HPowerupManager__IncEnergy_funcaddr = 0x2F6B8F4;
-static uintptr_t PlayerInfo__set_NewTreasureKey_funcaddr = 0x1fec5f8;
-void initFunctionAddress(uintptr_t base) {
+inline uintptr_t HPowerupManager__get_instance_funcaddr = 0x2F5747C;
+inline uintptr_t HPowerupManager__IncEnergy_funcaddr = 0x2F6B8F4;
+inline uintptr_t PlayerInfo__set_NewTreasureKey_funcaddr = 0x1fec5f8;
+inline uintptr_t SYBO_Subway_Characters_Character__get_Instance_Addr =
+    0x2235eb4;
+inline uintptr_t UnityEngine_Camera__get_main_funcaddr = 0x430BC54;
+inline uintptr_t UnityEngine_Camera__WorldToScreenPoint_addr = 0x430ADD4;
+inline uintptr_t DummyMgr__get_allDummy_addr = 0x2DED138;
+inline uintptr_t DummyMgr__get_Instance_addr = 0x2DECF78;
+inline void initFunctionAddress(uintptr_t base) {
   HPowerupManager__IncEnergy_funcaddr += base;
   HPowerupManager__get_instance_funcaddr += base;
   PlayerInfo__set_NewTreasureKey_funcaddr += base;
+  SYBO_Subway_Characters_Character__get_Instance_Addr += base;
+  UnityEngine_Camera__get_main_funcaddr += base;
+  UnityEngine_Camera__WorldToScreenPoint_addr += base;
+  DummyMgr__get_Instance_addr += base;
+  DummyMgr__get_allDummy_addr += base;
 }
 } // namespace FunctionAddress
-namespace GameFunction {
-void *(*HPowerupManager__get_instance)(void *method);
-void (*HPowerupManager__IncEnergy)(void *_this, void *method);
-void (*PlayerInfo__set_NewTreasureKey)(void *_this, int32_t value,
-                                       void *method);
 
-void initFunctions() {
+#define PATCH_RET ENCRYPTHEX("C0 03 5F D6")
+#define PATCH_RET0 ENCRYPTHEX("00 00 80 D2 C0 03 5F D6")
+#define PATCH_RET1 ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
+#define PATCH_FROM_FAILED_TO_FINSH_ADS                                         \
+  ENCRYPTHEX("C8 FF FF 17") // 这里是跳转到finish的位置
+
+namespace GameFunction {
+inline void *(*HPowerupManager__get_instance)(void *method);
+inline void (*HPowerupManager__IncEnergy)(void *_this, void *method);
+inline void (*PlayerInfo__set_NewTreasureKey)(void *_this, int32_t value,
+                                              void *method);
+inline void *(*SYBO_Subway_Characters_Character__get_Instance)(
+    void *method); // SYBO_Subway_Characters_Character_o
+inline void *(*UnityEngine_Camera__get_main)(void *method);
+inline UnityEngine_Vector3_o (*UnityEngine_Camera__WorldToScreenPoint)(
+    void *_this, // UnityEngine_Camera_o
+    UnityEngine_Vector3_o position, int32_t eye, void *method);
+inline void *(*DummyMgr__get_Instance)(void *method);
+inline System_Collections_Generic_Dictionary_int__Dummy__o *(
+    *DummyMgr__get_allDummy)(void *_this, void *method);
+inline UnityEngine_Vector3_o (
+    *SYBO_Subway_Characters_CharacterBase__get_WorldBodyCenterPosition)(
+    void *_this, // SYBO_Subway_Characters_CharacterBase_o
+    void *method);
+
+inline void initFunctions() {
   HPowerupManager__get_instance =
       reinterpret_cast<decltype(HPowerupManager__get_instance)>(
           FunctionAddress::HPowerupManager__get_instance_funcaddr);
@@ -50,82 +102,82 @@ void initFunctions() {
   PlayerInfo__set_NewTreasureKey =
       reinterpret_cast<decltype(PlayerInfo__set_NewTreasureKey)>(
           FunctionAddress::PlayerInfo__set_NewTreasureKey_funcaddr);
+  SYBO_Subway_Characters_Character__get_Instance = reinterpret_cast<
+      decltype(SYBO_Subway_Characters_Character__get_Instance)>(
+      FunctionAddress::SYBO_Subway_Characters_Character__get_Instance_Addr);
+  UnityEngine_Camera__get_main =
+      reinterpret_cast<decltype(UnityEngine_Camera__get_main)>(
+          FunctionAddress::UnityEngine_Camera__get_main_funcaddr);
+  UnityEngine_Camera__WorldToScreenPoint =
+      reinterpret_cast<decltype(UnityEngine_Camera__WorldToScreenPoint)>(
+          FunctionAddress::UnityEngine_Camera__WorldToScreenPoint_addr);
+  DummyMgr__get_Instance = reinterpret_cast<decltype(DummyMgr__get_Instance)>(
+      FunctionAddress::DummyMgr__get_Instance_addr);
+  DummyMgr__get_allDummy = reinterpret_cast<decltype(DummyMgr__get_allDummy)>(
+      FunctionAddress::DummyMgr__get_allDummy_addr);
 }
 } // namespace GameFunction
 
 namespace CustomFunctions {
-void addHoverboardEnergy() {
+inline void addHoverboardEnergy() {
   void *HPowerupManager = GameFunction::HPowerupManager__get_instance(0);
-  GameFunction::HPowerupManager__IncEnergy(HPowerupManager, 0);
+  if (HPowerupManager)
+    GameFunction::HPowerupManager__IncEnergy(HPowerupManager, 0);
 }
-void setNewTreasureKey(void *PlayerInfoInstance, int32_t value) {
+inline void setNewTreasureKey(void *PlayerInfoInstance, int32_t value) {
   GameFunction::PlayerInfo__set_NewTreasureKey(PlayerInfoInstance, value, 0);
 }
 } // namespace CustomFunctions
 
 namespace hooks {
-void (*org_PlayerInfo__set_amountOfCoins)(void *_this, int32_t value,
-                                          void *method);
-void new_PlayerInfo__set_amountOfCoins(void *_this, int32_t value,
-                                       void *method) {
-  BOOL isOn = [switches isSwitchOn:NSSENCRYPT("修改金币")];
-  if (isOn) {
-    value = [[switches getValueFromSwitch:NSSENCRYPT("修改金币")] intValue];
+inline void (*org_PlayerInfo__set_amountOfCoins)(void *_this, int32_t value,
+                                                 void *method);
+inline void new_PlayerInfo__set_amountOfCoins(void *_this, int32_t value,
+                                              void *method) {
+  if (Config::修改金币) {
+    value = Config::修改成多少金币;
   }
   org_PlayerInfo__set_amountOfCoins(_this, value, method);
-  isOn = [switches isSwitchOn:NSSENCRYPT("修改宝物钥匙")];
-  if (isOn) {
-    int32_t TreasureKeyvalue =
-        [[switches getValueFromSwitch:NSSENCRYPT("修改宝物钥匙")] intValue];
+  if (Config::修改宝物钥匙) {
+    int32_t TreasureKeyvalue = Config::修改成多少宝物钥匙;
     CustomFunctions::setNewTreasureKey(_this, TreasureKeyvalue);
   }
 }
-void (*org_PlayerInfo__set_amountOfKeys)(void *_this, int32_t value,
-                                         void *method);
-void new_PlayerInfo__set_amountOfKeys(void *_this, int32_t value,
-                                      void *method) {
-  BOOL isOn = [switches isSwitchOn:NSSENCRYPT("修改钥匙")];
-  if (isOn) {
-    value = [[switches getValueFromSwitch:NSSENCRYPT("修改钥匙")] intValue];
+inline void (*org_PlayerInfo__set_amountOfKeys)(void *_this, int32_t value,
+                                                void *method);
+inline void new_PlayerInfo__set_amountOfKeys(void *_this, int32_t value,
+                                             void *method) {
+  if (Config::修改钥匙) {
+    value = Config::修改成多少钥匙;
   }
   org_PlayerInfo__set_amountOfKeys(_this, value, method);
 }
-void (*org_GameStats__set_score)(void *_this, int32_t value, void *method);
-void new_GameStats__set_score(void *_this, int32_t value, void *method) {
-  BOOL isOn = [switches isSwitchOn:NSSENCRYPT("修改分数")];
-  if (isOn) {
-    value = [[switches getValueFromSwitch:NSSENCRYPT("修改分数")] intValue];
+inline void (*org_GameStats__set_score)(void *_this, int32_t value,
+                                        void *method);
+inline void new_GameStats__set_score(void *_this, int32_t value, void *method) {
+  if (Config::修改分数) {
+    value = Config::修改成多少分;
   }
   org_GameStats__set_score(_this, value, method);
 }
-bool (*org_SuperRunVIPManager__IsActive)(void *_this, void *method);
-bool new_SuperRunVIPManager__IsActive(void *_this, void *method) {
-  BOOL isOn = [switches isSwitchOn:NSSENCRYPT("强开炫跑卡")];
-  if (isOn) {
-    return true;
-  }
-  return org_SuperRunVIPManager__IsActive(_this, method);
-}
 
-void (*org_HPowerupEnergy___TriggerIn)(void *_this, void *method);
-void new_HPowerupEnergy___TriggerIn(void *_this, void *method) {
+inline void (*org_HPowerupEnergy___TriggerIn)(void *_this, void *method);
+inline void new_HPowerupEnergy___TriggerIn(void *_this, void *method) {
   org_HPowerupEnergy___TriggerIn(_this, method);
-  BOOL isOn = [switches isSwitchOn:NSSENCRYPT("PVP双倍滑板能量")];
-  if (isOn) {
+  if (Config::双倍充能) {
     CustomFunctions::addHoverboardEnergy();
   }
 }
 
-void (*org_HCharSpeed___ChangeState)(void *_this, uint8_t state,
-                                     float bumpSpeedLossPercentage,
-                                     int32_t accLevel, bool forceChange,
-                                     void *method);
-void new_HCharSpeed___ChangeState(void *_this, uint8_t state,
-                                  float bumpSpeedLossPercentage,
-                                  int32_t accLevel, bool forceChange,
-                                  void *method) {
-  BOOL isOn = [switches isSwitchOn:NSSENCRYPT("PVP疯狂加速")];
-  if (isOn) {
+inline void (*org_HCharSpeed___ChangeState)(void *_this, uint8_t state,
+                                            float bumpSpeedLossPercentage,
+                                            int32_t accLevel, bool forceChange,
+                                            void *method);
+inline void new_HCharSpeed___ChangeState(void *_this, uint8_t state,
+                                         float bumpSpeedLossPercentage,
+                                         int32_t accLevel, bool forceChange,
+                                         void *method) {
+  if (Config::疯狂加速) {
     accLevel = 3;
     if (state == 3LL || bumpSpeedLossPercentage != 0.0) {
       state = 2;
@@ -136,17 +188,22 @@ void new_HCharSpeed___ChangeState(void *_this, uint8_t state,
   org_HCharSpeed___ChangeState(_this, state, bumpSpeedLossPercentage, accLevel,
                                forceChange, method);
 }
-
-UnityEngine_Vector3_o (*org_CharacterModel__GetScale)(void *_this,
-                                                      int32_t characterType,
-                                                      void *method);
-UnityEngine_Vector3_o
+inline float (*org_HCharSpeed__get_speed)(void *_this, void *method);
+inline float new_HCharSpeed__get_speed(void *_this, void *method) {
+  float result = org_HCharSpeed__get_speed(_this, method);
+  if (Config::修改速度) {
+    if (result < Config::速度修改为)
+      result = Config::速度修改为;
+  }
+  return result;
+}
+inline UnityEngine_Vector3_o (*org_CharacterModel__GetScale)(
+    void *_this, int32_t characterType, void *method);
+inline UnityEngine_Vector3_o
 new_CharacterModel__GetScale(void *_this, int32_t characterType, void *method) {
   auto result = org_CharacterModel__GetScale(_this, characterType, method);
-  BOOL isOn = [switches isSwitchOn:NSSENCRYPT("修改模型大小")];
-  if (isOn) {
-    float value =
-        [[switches getValueFromSwitch:NSSENCRYPT("修改模型大小")] floatValue];
+  if (Config::修改模型大小) {
+    float value = Config::模型大小倍率;
     result.fields.x *= value;
     result.fields.y *= value;
     result.fields.z *= value;
@@ -154,17 +211,65 @@ new_CharacterModel__GetScale(void *_this, int32_t characterType, void *method) {
   return result;
 }
 
-void (*org_UnityEngine_Transform__set_position)(
+inline void (*org_UnityEngine_Transform__set_position)(
     void *_this, // UnityEngine_Transform_o
     UnityEngine_Vector3_o value, void *method);
 
-void new_UnityEngine_Transform__set_position(
-    void *_this, // UnityEngine_Transform_o
-    UnityEngine_Vector3_o value, void *method) {
-  BOOL isOn = [switches isSwitchOn:NSSENCRYPT("上帝视角")];
-  if (isOn) {
+inline void
+new_UnityEngine_Transform__set_position(void *_this, // UnityEngine_Transform_o
+                                        UnityEngine_Vector3_o value,
+                                        void *method) {
+  if (Config::上帝视角) {
     value.fields.y = 100;
   }
   org_UnityEngine_Transform__set_position(_this, value, method);
+}
+inline System_String_o newcontent;
+inline void (*org_HRealPVPRoomManager__CommitGameChat)(
+    void *_this, // HRealPVPRoomManager_o
+    int32_t chatType, int32_t chatId, System_String_o *content, void *method);
+inline void new_HRealPVPRoomManager__CommitGameChat(
+    void *_this, // HRealPVPRoomManager_o
+    int32_t chatType, int32_t chatId, System_String_o *content, void *method) {
+  chatType = 3;
+  chatId = 0;
+  newcontent = *content;
+  std::u16string tmp = utf8_to_utf16le(Config::要发送的消息内容, false, NULL);
+  newcontent.fields.m_stringLength = tmp.size();
+  for (int i = 0; i < tmp.size(); i++) {
+    newcontent.fields.m_firstChar[i] = tmp[i];
+  }
+  org_HRealPVPRoomManager__CommitGameChat(_this, chatType, chatId, &newcontent,
+                                          method);
+}
+
+inline void (*org_SYBO_Subway_Characters_Character__ApplyGravity)(void *_this,
+                                                                  void *method);
+inline void new_SYBO_Subway_Characters_Character__ApplyGravity(void *_this,
+                                                               void *method) {
+  //_this是SYBO_Subway_Characters_Character_o*
+  if (Config::修改重力)
+    *(float *)((uintptr_t)_this + 0x10 + structoffset_DummyFields_gravity) =
+        Config::重力修改为;
+  org_SYBO_Subway_Characters_Character__ApplyGravity(_this, method);
+}
+inline System_String_o newNickname;
+inline System_String_o *(*org_PlayerInfo__get_playerNickName)(
+    void *_this, // PlayerInfo_o*
+    void *method);
+inline System_String_o *
+new_PlayerInfo__get_playerNickName(void *_this, // RealPVPManager_o
+                                   void *method) {
+  System_String_o *result = org_PlayerInfo__get_playerNickName(_this, method);
+  if (Config::修改昵称) {
+    newNickname = *result;
+    std::u16string tmp = utf8_to_utf16le(Config::修改昵称为, false, NULL);
+    newNickname.fields.m_stringLength = tmp.size();
+    for (int i = 0; i < tmp.size(); i++) {
+      newNickname.fields.m_firstChar[i] = tmp[i];
+    }
+    return &newNickname;
+  }
+  return result;
 }
 } // namespace hooks

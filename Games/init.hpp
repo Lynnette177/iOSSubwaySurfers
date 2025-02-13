@@ -33,23 +33,27 @@ bool InstallHooks() {
     HOOK(hookFunctionAddress_UnityEngine_Transform__set_position_Address,
          hooks::new_UnityEngine_Transform__set_position,
          hooks::org_UnityEngine_Transform__set_position);
+    HOOK(hookFunctionAddress_HRealPVPRoomManager__CommitGameChat_Address,
+         hooks::new_HRealPVPRoomManager__CommitGameChat,
+         hooks::org_HRealPVPRoomManager__CommitGameChat);
+    HOOK(hookFunctionAddress_SYBO_Subway_Characters_Character__ApplyGravity,
+         hooks::new_SYBO_Subway_Characters_Character__ApplyGravity,
+         hooks::org_SYBO_Subway_Characters_Character__ApplyGravity);
+    HOOK(hookFunctionAddress_HCharSpeed__get_speed,
+         hooks::new_HCharSpeed__get_speed, hooks::org_HCharSpeed__get_speed);
+    HOOK(hookFunctionAddress_PlayerInfo__get_playerNickName,
+         hooks::new_PlayerInfo__get_playerNickName,
+         hooks::org_PlayerInfo__get_playerNickName);
     return true;
   }
   return false;
 }
-#define PATCH_RET ENCRYPTHEX("C0 03 5F D6")
-#define PATCH_RET0 ENCRYPTHEX("00 00 80 D2 C0 03 5F D6")
-#define PATCH_RET1 ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
-#define PATCH_FROM_FAILED_TO_FINSH_ADS ENCRYPTHEX("C8 FF FF 17") //这里是跳转到finish的位置
-
-void Initialize() { [menu setFrameworkName:EXCUTABLENAME]; }
 
 void patch_at_start() {
-  /*ONETIMEPATCH(ENCRYPTOFFSET("0x24AE224"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x24AE224"),
                PATCH_RET0) // 移除SubwayAdManager__ShowSplashAd
   ONETIMEPATCH(ENCRYPTOFFSET("0x24AE448"),
                PATCH_RET1) // 移除SubwayAdManager__ShowSplashAdClosed
-     */
   ONETIMEPATCH(
       ENCRYPTOFFSET("0x286D9D8"),
       PATCH_RET) // 禁用货币反作弊CheatDetectorManager__CurrencyCheatDetect
@@ -63,4 +67,10 @@ void patch_at_start() {
                PATCH_RET) // 禁用FrontScreen__UploadCheaterPlayerLog
   ONETIMEPATCH(ENCRYPTOFFSET("0x33323F8"),
                PATCH_RET) // 禁用BindWeChatManager__OnLoginShield
+}
+
+void Initialize() { //[menu setFrameworkName:EXCUTABLENAME];
+  while (!InstallHooks()) {
+  } // 在这里拿到UnityFramework基地址，确保加载过了
+  patch_at_start();
 }

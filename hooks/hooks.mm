@@ -18,7 +18,7 @@ uint64_t va2rva(struct mach_header_64* header, uint64_t va)
             if(seg->fileoff==0 && seg->filesize>0)
             {
                 if(header_vaddr != -1) {
-                    log(@"multi header mapping! %s", seg->segname);
+                    debug_log(@"multi header mapping! %s", seg->segname);
                     return 0;
                 }
                 header_vaddr = seg->vmaddr;
@@ -29,11 +29,11 @@ uint64_t va2rva(struct mach_header_64* header, uint64_t va)
     }
     
     if(header_vaddr != -1) {
-        //log(@"header_vaddr=%p", header_vaddr);
+        //debug_log(@"header_vaddr=%p", header_vaddr);
         rva -= header_vaddr;
     }
     
-    //log(@"va2rva %p=>%p", va, rva);
+    //debug_log(@"va2rva %p=>%p", va, rva);
     
     return rva;
 }
@@ -51,7 +51,7 @@ void* rva2data(struct mach_header_64* header, uint64_t rva)
             if(seg->fileoff==0 && seg->filesize>0)
             {
                 if(header_vaddr != -1) {
-                    log(@"multi header mapping! %s", seg->segname);
+                    debug_log(@"multi header mapping! %s", seg->segname);
                     return NULL;
                 }
                 header_vaddr = seg->vmaddr;
@@ -62,7 +62,7 @@ void* rva2data(struct mach_header_64* header, uint64_t rva)
     }
     
     if(header_vaddr != -1) {
-        log(@"header_vaddr=%p", header_vaddr);
+        debug_log(@"header_vaddr=%p", header_vaddr);
         rva += header_vaddr;
     }
     
@@ -84,7 +84,7 @@ void* rva2data(struct mach_header_64* header, uint64_t rva)
                 return NULL;
               }
                 
-              log(@"vaddr=%p offset=%p ", rva, seg->fileoff + offset);
+              debug_log(@"vaddr=%p offset=%p ", rva, seg->fileoff + offset);
               return (void*)((uint64_t)header + seg->fileoff + offset);
             }
         }
@@ -106,17 +106,17 @@ NSMutableData* load_macho_data(NSString* path)
     {
         struct fat_header* fathdr = (struct fat_header*)macho.mutableBytes;
         struct fat_arch* archdr = (struct fat_arch*)((UInt64)fathdr + sizeof(*fathdr));
-        log(@"add_hook_section nfat_arch=%d", NXSwapLong(fathdr->nfat_arch));
+        debug_log(@"add_hook_section nfat_arch=%d", NXSwapLong(fathdr->nfat_arch));
         if(NXSwapLong(fathdr->nfat_arch) != 1) {
-            log(@"macho has too many arch!");
+            debug_log(@"macho has too many arch!");
             return nil;
         }
         
         if(NXSwapLong(archdr->cputype) != CPU_TYPE_ARM64 || archdr->cpusubtype!=0) {
-            log(@"macho arch not support!");
+            debug_log(@"macho arch not support!");
             return nil;
         }
-        log(@"subarch=%x %x", NXSwapLong(archdr->offset), NXSwapLong(archdr->size));
+        debug_log(@"subarch=%x %x", NXSwapLong(archdr->offset), NXSwapLong(archdr->size));
         macho = [NSMutableData dataWithData:
                  [macho subdataWithRange:NSMakeRange(NXSwapLong(archdr->offset), NXSwapLong(archdr->size))]];
         
@@ -124,22 +124,22 @@ NSMutableData* load_macho_data(NSString* path)
     {
         struct fat_header* fathdr = (struct fat_header*)macho.mutableBytes;
         struct fat_arch_64* archdr = (struct fat_arch_64*)((UInt64)fathdr + sizeof(*fathdr));
-        log(@"macho nfat_arch=%d", NXSwapLong(fathdr->nfat_arch));
+        debug_log(@"macho nfat_arch=%d", NXSwapLong(fathdr->nfat_arch));
         if(NXSwapLong(fathdr->nfat_arch) != 1) {
-            log(@"macho has too many arch!");
+            debug_log(@"macho has too many arch!");
             return nil;
         }
         
         if(NXSwapLong(archdr->cputype) != CPU_TYPE_ARM64 || archdr->cpusubtype!=0) {
-            log(@"macho arch not support!");
+            debug_log(@"macho arch not support!");
             return nil;
         }
-        log(@"subarch=%x %x", NXSwapLong(archdr->offset), NXSwapLong(archdr->size));
+        debug_log(@"subarch=%x %x", NXSwapLong(archdr->offset), NXSwapLong(archdr->size));
         macho = [NSMutableData dataWithData:
                  [macho subdataWithRange:NSMakeRange(NXSwapLong(archdr->offset), NXSwapLong(archdr->size))]];
         
     } else if(magic != MH_MAGIC_64) {
-        log(@"macho arch not support!");
+        debug_log(@"macho arch not support!");
         return nil;
     }
     
@@ -149,7 +149,7 @@ NSMutableData* load_macho_data(NSString* path)
 NSMutableData* add_hook_section(NSMutableData* macho)
 {
     struct mach_header_64* header = (struct mach_header_64*)macho.mutableBytes;
-    log(@"macho %x %x", header->magic, macho.length);
+    debug_log(@"macho %x %x", header->magic, macho.length);
     
     uint64_t vm_end = 0;
     uint64_t min_section_offset = 0;
@@ -157,13 +157,13 @@ NSMutableData* add_hook_section(NSMutableData* macho)
     
     struct load_command* lc = (struct load_command*)((UInt64)header + sizeof(*header));
     for (int i = 0; i < header->ncmds; i++) {
-        log(@"macho load cmd=%d", lc->cmd);
+        debug_log(@"macho load cmd=%d", lc->cmd);
         
         if (lc->cmd == LC_SEGMENT_64)
         {
             struct segment_command_64 * seg = (struct segment_command_64 *) lc;
             
-            log(@"segment: %s file=%x:%x vm=%p:%p ", seg->segname, seg->fileoff, seg->filesize, seg->vmaddr, seg->vmsize);
+            debug_log(@"segment: %s file=%x:%x vm=%p:%p ", seg->segname, seg->fileoff, seg->filesize, seg->vmaddr, seg->vmsize);
             
             if(strcmp(seg->segname,SEG_LINKEDIT)==0)
                 linkedit_seg = seg;
@@ -174,7 +174,7 @@ NSMutableData* add_hook_section(NSMutableData* macho)
             struct section_64* sec = (struct section_64*)((uint64_t)seg+sizeof(*seg));
             for(int j=0; j<seg->nsects; j++)
             {
-                log(@"section[%d] = %s/%s offset=%x vm=%p:%p", j, sec[j].segname, sec[j].sectname,
+                debug_log(@"section[%d] = %s/%s offset=%x vm=%p:%p", j, sec[j].segname, sec[j].sectname,
                       sec[j].offset, sec[j].addr, sec[j].size);
                 
                 if(min_section_offset < sec[j].offset)
@@ -186,11 +186,11 @@ NSMutableData* add_hook_section(NSMutableData* macho)
     }
     
     if(!min_section_offset || !vm_end || !linkedit_seg) {
-        log(@"cannot parse macho file!");
+        debug_log(@"cannot parse macho file!");
         return nil;
     }
     
-    log(@"min_section_offset=%x vm_end=%p", min_section_offset, vm_end);
+    debug_log(@"min_section_offset=%x vm_end=%p", min_section_offset, vm_end);
     
     NSRange linkedit_range = NSMakeRange(linkedit_seg->fileoff, linkedit_seg->filesize);
     NSData* linkedit_data = [macho subdataWithRange:linkedit_range];
@@ -295,7 +295,7 @@ NSMutableData* add_hook_section(NSMutableData* macho)
               tmp->lazy_bind_off += fixoffset;
             if (tmp->export_off)
               tmp->export_off += fixoffset;
-            log(@"[-] fix LC_DYLD_INFO_ done ");
+            debug_log(@"[-] fix LC_DYLD_INFO_ done ");
           } break;
               
           case LC_SYMTAB:
@@ -305,7 +305,7 @@ NSMutableData* add_hook_section(NSMutableData* macho)
               tmp->symoff += fixoffset;
             if (tmp->stroff)
               tmp->stroff += fixoffset;
-            log(@"[-] fix LC_SYMTAB done ");
+            debug_log(@"[-] fix LC_SYMTAB done ");
           } break;
               
           case LC_DYSYMTAB:
@@ -323,7 +323,7 @@ NSMutableData* add_hook_section(NSMutableData* macho)
               tmp->extreloff += fixoffset;
             if (tmp->locreloff)
               tmp->locreloff += fixoffset;
-            log(@"[-] fix LC_DYSYMTAB done ");
+            debug_log(@"[-] fix LC_DYSYMTAB done ");
           } break;
               
           case LC_FUNCTION_STARTS:
@@ -337,13 +337,13 @@ NSMutableData* add_hook_section(NSMutableData* macho)
           {
             struct linkedit_data_command *tmp = (struct linkedit_data_command *)load_cmd;
             if (tmp->dataoff) tmp->dataoff += fixoffset;
-            log(@"[-] fix linkedit_data_command done ");
+            debug_log(@"[-] fix linkedit_data_command done ");
           } break;
       }
     }
     
     if(min_section_offset < (sizeof(struct mach_header_64)+header->sizeofcmds)) {
-        log(@"macho header has no enough space!");
+        debug_log(@"macho header has no enough space!");
         return nil;
     }
     
@@ -360,7 +360,7 @@ NSMutableData* add_hook_section(NSMutableData* macho)
     
     [macho appendData:linkedit_data];
     
-    log(@"macho file size=%x", macho.length);
+    debug_log(@"macho file size=%x", macho.length);
     
     return macho;
 }
@@ -429,7 +429,7 @@ NSString* StaticInlineHookPatch(char* machoPath, uint64_t vaddr, char* patch)
     while(true) {
         
         header = (struct mach_header_64*)macho.mutableBytes;
-        log(@"macho %x %x", header->magic, macho.length);
+        debug_log(@"macho %x %x", header->magic, macho.length);
         
         struct load_command* lc = (struct load_command*)((UInt64)header + sizeof(*header));
         for (int i = 0; i < header->ncmds; i++) {
@@ -448,7 +448,7 @@ NSString* StaticInlineHookPatch(char* machoPath, uint64_t vaddr, char* patch)
         }
         
         if(text_seg && data_seg) {
-            log(@"hook section found!");
+            debug_log(@"hook section found!");
             break;
         }
         
@@ -483,7 +483,7 @@ NSString* StaticInlineHookPatch(char* machoPath, uint64_t vaddr, char* patch)
         
         patch_size = code_end - funcRVA;
         
-        log(@"codepath %p %s : %p~%p~%p %x", vaddr, patch, funcRVA, patch_end, code_end, patch_size);
+        debug_log(@"codepath %p %s : %p~%p~%p %x", vaddr, patch, funcRVA, patch_end, code_end, patch_size);
         
         NSMutableData* patchBytes = [[NSMutableData alloc] initWithLength:patch_size];
         patch_bytes = patchBytes.mutableBytes;
@@ -547,7 +547,7 @@ NSString* StaticInlineHookPatch(char* machoPath, uint64_t vaddr, char* patch)
                 targetData = rva2data(header, targetRVA);
             }
             
-            log(@"found empty StaticInlineHookBlock %d %p=>%p ", i, targetRVA, targetData);
+            debug_log(@"found empty StaticInlineHookBlock %d %p=>%p ", i, targetRVA, targetData);
             
             break;
         }
@@ -556,7 +556,7 @@ NSString* StaticInlineHookPatch(char* machoPath, uint64_t vaddr, char* patch)
         return @"????????! HOOK count full!";
     }
     
-    log(@"func: %p=>%p target: %p=>%p ", funcRVA, funcData, targetRVA, targetData);
+    debug_log(@"func: %p=>%p target: %p=>%p ", funcRVA, funcData, targetRVA, targetData);
     
     if(!dobby_static_inline_hook(hookBlock, hookBlockRVA, funcRVA, funcData, targetRVA, targetData,
                                  InstrumentBridgeRVA, patch_bytes, patch_size))
@@ -620,7 +620,7 @@ StaticInlineHookBlock* find_hook_block(void* base, uint64_t vaddr)
     }
     
     if(!text_seg || !data_seg) {
-        log(@"cannot parse hook info!");
+        debug_log(@"cannot parse hook info!");
         return NULL;
     }
     
@@ -629,7 +629,7 @@ StaticInlineHookBlock* find_hook_block(void* base, uint64_t vaddr)
     {
         if(hookBlock[i].hook_vaddr == (uint64_t)vaddr)
         {
-            //log(@"found hook block %d for %llX", i, vaddr);
+            //debug_log(@"found hook block %d for %llX", i, vaddr);
             return &hookBlock[i];
         }
     }
@@ -641,13 +641,13 @@ void* StaticInlineHookFunction(char* machoPath, uint64_t vaddr, void* replace)
 {
     void* base = find_module_by_path(machoPath);
     if(!base) {
-        log(@"cannot find module!");
+        debug_log(@"cannot find module!");
         return NULL;
     }
     
     StaticInlineHookBlock* hookBlock = find_hook_block(base, vaddr);
     if(!hookBlock) {
-        log(@"cannot find hook block!");
+        debug_log(@"cannot find hook block!");
         return NULL;
     }
     
@@ -660,21 +660,21 @@ BOOL ActiveCodePatch(char* machoPath, uint64_t vaddr, char* patch)
 {
     void* base = find_module_by_path(machoPath);
     if(!base) {
-        // log(@"cannot find module!");
-         log(@"%p cannot find module!", (void *)vaddr);
+        // debug_log(@"cannot find module!");
+         debug_log(@"%p cannot find module!", (void *)vaddr);
         return NO;
     }
     
     StaticInlineHookBlock* hookBlock = find_hook_block(base, vaddr&~3);
     if(!hookBlock) {
-        //  log(@"cannot find hook block!");
-         log(@"%p cannot find hook block!", (void *)vaddr);
+        //  debug_log(@"cannot find hook block!");
+         debug_log(@"%p cannot find hook block!", (void *)vaddr);
         return NO;
     }
     
     if(hookBlock->patch_hash != calc_patch_hash(vaddr, patch)) {
-        //  log(@"code patch bytes changed!");
-         log(@"%p code patch bytes changed!", (void *)vaddr);
+        //  debug_log(@"code patch bytes changed!");
+         debug_log(@"%p code patch bytes changed!", (void *)vaddr);
         return NO;
     }
     
@@ -687,21 +687,21 @@ BOOL DeactiveCodePatch(char* machoPath, uint64_t vaddr, char* patch)
 {
     void* base = find_module_by_path(machoPath);
     if(!base) {
-        // log(@"cannot find module!");
-         log(@"%p cannot find hook block!", (void *)vaddr);
+        // debug_log(@"cannot find module!");
+         debug_log(@"%p cannot find hook block!", (void *)vaddr);
         return NO;
     }
     
     StaticInlineHookBlock* hookBlock = find_hook_block(base, vaddr&~3);
     if(!hookBlock) {
-        // log(@"cannot find hook block!");
-         log(@"%p cannot find module!", (void *)vaddr);
+        // debug_log(@"cannot find hook block!");
+         debug_log(@"%p cannot find module!", (void *)vaddr);
         return NO;
     }
     
     if(hookBlock->patch_hash != calc_patch_hash(vaddr, patch)) {
-        // log(@"code patch bytes changed!");
-         log(@"%p code patch bytes changed!", (void *)vaddr);
+        // debug_log(@"code patch bytes changed!");
+         debug_log(@"%p code patch bytes changed!", (void *)vaddr);
         return NO;
     }
     
@@ -710,3 +710,24 @@ BOOL DeactiveCodePatch(char* machoPath, uint64_t vaddr, char* patch)
     return YES;
 }
 
+
+
+
+/*越狱的hook*/
+uint64_t getRealOffset(uint64_t offset) {
+  KittyMemory::getAbsoluteAddress(EXCUTABLENAME, offset);
+}
+
+// Patching a offset without switch.
+
+MemoryPatch patchOffset(uint64_t offset, std::string hexBytes) {
+  MemoryPatch patch =
+      MemoryPatch::createWithHex(EXCUTABLENAME, offset, hexBytes);
+  if (!patch.isValid()) {
+    debug_log(@"Failing offset: 0x%llu, please re-check the hex you entered.",offset);
+  }
+  if (!patch.Modify()) {
+    debug_log(@"Something went wrong while patching this offset: 0x%llu",offset);
+  }
+  return patch;
+}

@@ -1,5 +1,6 @@
 #pragma once
 #import "dobby_defines.h"
+#import "../Utils/Macros.h"
 #include "../Utils/definations.h"
 #include <libgen.h>
 #include <mach-o/fat.h>
@@ -13,14 +14,6 @@
 #include <array>
 #include <substrate.h>
 
-
-
-
-#ifdef DEBUG
-#define log(...)  NSLog(__VA_ARGS__)
-#else
-#define log(...)
-#endif
 
 //HOOK BEGIN
 #pragma GCC diagnostic ignored "-Warc-performSelector-leaks"
@@ -58,33 +51,41 @@ void* StaticInlineHookFunction(char* machoPath, uint64_t vaddr, void* replace);
 
 BOOL ActiveCodePatch(char* machoPath, uint64_t vaddr, char* patch);
 BOOL DeactiveCodePatch(char* machoPath, uint64_t vaddr, char* patch);
+
+/*JB*/
+uint64_t getRealOffset(uint64_t offset);
+MemoryPatch patchOffset(uint64_t offset, std::string hexBytes);
+
+
 #ifdef JAILED
 inline NSString* result_string;
 #define HOOK(x, y, z) \
 result_string = StaticInlineHookPatch(EXCUTABLEPATH, x, nullptr); \
+usleep(50000);\
 if (result_string) { \
-     log(@"Hook result: %s", result_string.UTF8String); \
+     debug_log(@"Hook result: %s", result_string.UTF8String); \
     void* result = StaticInlineHookFunction(EXCUTABLEPATH, x, (void *) y); \
-     log(@"Hook result %p", result); \
+     debug_log(@"Hook result %p", result); \
     *(void **) (&z) = (void*) result; \
 }
 #define ONETIMEPATCH(addr, patch)\
 result_string = StaticInlineHookPatch(EXCUTABLEPATH, addr, (char*)patch); \
 if (result_string){\
-     log(result_string);\
+     debug_log(result_string);\
     if(ActiveCodePatch(EXCUTABLEPATH, addr,(char*)patch))\
-         log(@"OneTime Patch Succeed.");\
+         debug_log(@"OneTime Patch Succeed.");\
 }
 #define ADDSWITCHPATCH(addr, patch)\
-log(StaticInlineHookPatch(EXCUTABLEPATH, addr, patch));
+debug_log(StaticInlineHookPatch(EXCUTABLEPATH, addr, patch));\
+usleep(50000);
 
 #define ACTIVATESWITCHPATCH(addr, patch)\
 if (ActiveCodePatch(EXCUTABLEPATH, addr, patch)){\
-     log(@"Patch Activated.");\
+     debug_log(@"Patch Activated.");\
 }
 #define DEACTIVATESWITCHPATCH(addr, patch)\
 if (DeactiveCodePatch(EXCUTABLEPATH, addr, patch)){\
-     log(@"Patch DEActivated.");\
+     debug_log(@"Patch DEActivated.");\
 }
 #else
 #define HOOK(x, y, z) \

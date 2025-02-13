@@ -1,5 +1,5 @@
-THEOS_DEVICE_IP = 192.168.123.128
-#THEOS_DEVICE_IP = 192.168.2.175 # install to device from pc
+#THEOS_DEVICE_IP = 192.168.123.128
+THEOS_DEVICE_IP = 192.168.2.175 # install to device from pc
 ARCHS = arm64 #arm64e
 DEBUG = 0
 FINALPACKAGE = 1

@@ -156,6 +156,9 @@ void Submenu0_Personal(std::map<std::string, bool> &childVisibilityMap,
                        bool isPage, bool shouldLoad) {
   if (isPage)
     ImGui::Text("信息选项");
+  SimpleToggleButton(childVisibilityMap, ICON_FA_COINS, u8"重新登录",
+                     &Config ::重新登录, isPage,
+                     "开启后，重启游戏进行重新登录，避免因为外挂导致登录弹窗消失", shouldLoad);
   ToggleButtonWithOffset(
       childVisibilityMap, ICON_FA_ID_CARD, u8"跳过实名认证", &Config ::实名认证,
       {offset_AntiAddictionManager_HasVerifid}, {(char *)PATCH_RET1}, isPage,
@@ -248,8 +251,7 @@ void Submenu3_Server(std::map<std::string, bool> &childVisibilityMap,
   if (isPage)
     ImGui::Text("PVP选项");
   SimpleToggleButton(childVisibilityMap, ICON_FA_BATTERY_FULL, u8"修改昵称",
-                     &Config ::修改昵称, isPage,
-                     "开启后修改匹配时本人昵称",
+                     &Config ::修改昵称, isPage, "开启后修改匹配时本人昵称",
                      shouldLoad);
   ToggleButtonWithOffset(childVisibilityMap, ICON_FA_SHIELD_ALT, u8"无视道具",
                          &Config ::无视道具, {offset_HPFXBase___DefenseCheck},

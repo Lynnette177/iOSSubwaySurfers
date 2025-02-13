@@ -3,6 +3,7 @@
 namespace Config {
 
     inline bool 加载一次参数 = false;
+    inline bool 重新登录 = true;
     inline float screenScale = 2;
 
     /*personal*/

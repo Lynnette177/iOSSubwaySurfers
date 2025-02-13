@@ -1,13 +1,13 @@
+#include "Config/Config.h"
 #import "Games/init.hpp"
+#import "ImGui/MenuUtils.h"
+#import "SCLAlertView/SCLAlertView.h"
 #import "Utils/Macros.h"
 #include <Foundation/Foundation.h>
 #include <cstdbool>
 #include <cstdint>
 #import <mach-o/dyld.h>
 #import <substrate.h>
-#import "SCLAlertView/SCLAlertView.h"
-#import "ImGui/MenuUtils.h"
-
 
 void setup() {
   /*
@@ -149,10 +149,16 @@ void setupMenu() {
 static void didFinishLaunching(CFNotificationCenterRef center, void *observer,
                                CFStringRef name, const void *object,
                                CFDictionaryRef info) {
+  {
+    if (loadBoolSettings("重新登录", true)) {
+      saveBoolSettings("重新登录", false);
+      return;
+    }
+  }
   Initialize();
-  //setupMenu();//当patch offset时需要打开因为必须在一加载的时候patch
-  // 在这里面设置了越狱状态下menu的patch都是patch哪个可执行文件
-  timer(3) {
+  // setupMenu();//当patch offset时需要打开因为必须在一加载的时候patch
+  //  在这里面设置了越狱状态下menu的patch都是patch哪个可执行文件
+  timer(5) {
     SCLAlertView *alert = [[SCLAlertView alloc] initWithNewWindow];
 
     // Website link, remove it if you don't need it.
@@ -161,12 +167,12 @@ static void didFinishLaunching(CFNotificationCenterRef center, void *observer,
            [[UIApplication sharedApplication]
                openURL:[NSURL URLWithString:NSSENCRYPT(
                                                 "https://note.lynnette.uk")]];
-           timer(1) { setupMenu(); });
+           timer(2) { setupMenu(); });
          }];
 
     [alert addButton:NSSENCRYPT("感谢，已理解")
          actionBlock:^(void) {
-           timer(1) { setupMenu(); });
+           timer(2) { setupMenu(); });
          }];
 
     alert.shouldDismissOnTapOutside = NO;

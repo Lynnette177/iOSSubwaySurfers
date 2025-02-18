@@ -10,12 +10,13 @@
 #define structoffset_DummyFields_PlayerID 0x300
 #define structoffset_DummyFields_CharacterID 0x304
 #define structoffset_DummyFields_name 0x328
+#define structoffset_DummyFields_isAIMode 0x358
 /*DummyField 继承自CharacterBase*/
 #define structoffset_DummyFields_gamePosition 0x18C
 #define structoffset_DummyFields_transformPosition 0x198
 #define structoffset_DummyFields_gravity 0xAC
+#define structoffset_DummyFields_UID 0x10
 /*SYBO_Subway_Characters_Character_o也继承base*/
-
 
 struct UnityEngine_Vector3_Fields {
   float x;
@@ -311,7 +312,25 @@ struct System_String_o {
     std::string namestr = utf16le_to_utf8(namewstr);
     return namestr;
   }
+  void set_utf8_to_this(std::string in) {
+    std::u16string tmp = utf8_to_utf16le(in, false, NULL);
+    this->fields.m_stringLength = tmp.size();
+    for (int i = 0; i < tmp.size(); i++) {
+      this->fields.m_firstChar[i] = tmp[i];
+    }
+  }
 };
+
+inline std::string generateRandomString() {
+  std::string result = "7"; // 字符串以 '7' 开头
+  // 设置随机数种子
+  std::srand(std::time(0));
+  // 生成接下来的9个数字字符
+  for (int i = 0; i < 9; ++i) {
+    result += std::to_string(std::rand() % 10); // 生成随机数字 0-9
+  }
+  return result;
+}
 
 typedef uintptr_t il2cpp_array_size_t;
 typedef int32_t il2cpp_array_lower_bound_t;

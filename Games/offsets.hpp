@@ -3,8 +3,10 @@
 #import "../Utils/Macros.h"
 #include "GameStructs.h"
 #include <__config>
+#include <cstddef>
 #include <cstdint>
 #include <string>
+#include <type_traits>
 
 #define offset_SuperRunVIPManager__IsActive ENCRYPTOFFSET("0x24BB334")
 #define offset_IDreamSky_BagManager$$IsUnlockedCharacter                       \
@@ -22,6 +24,10 @@
 #define offset_SYBO_Subway_Utilities_DebugSettings__get_CharacterInvincible    \
   ENCRYPTOFFSET("0x2342B74")
 #define offset_AntiAddictionManager_HasVerifid ENCRYPTOFFSET("0x2EA0058")
+#define offset_ReportPlayerManager__CanReportPlayer ENCRYPTOFFSET("0x2142CD0")
+#define offset_ReportPlayerManager__ReportPlayerManager__CanShowReportPlayer   \
+  ENCRYPTOFFSET("0x2142DD8")
+#define offset_PlayerInfo__get_ReportPlayerDayTimes ENCRYPTOFFSET("0x1FF19E0")
 
 #define hookFunctionAddress_PlayerInfo__set_amountOfCoins_Address              \
   ENCRYPTOFFSET("0x1FABA74")
@@ -44,6 +50,8 @@
   ENCRYPTOFFSET("0x224154C")
 #define hookFunctionAddress_PlayerInfo__get_playerNickName                     \
   ENCRYPTOFFSET("0x1FC77D8")
+#define hookFunctionAddress_ReportPlayerManager__ReportPlayer                  \
+  ENCRYPTOFFSET("0x2142A20")
 
 namespace FunctionAddress {
 inline uintptr_t HPowerupManager__get_instance_funcaddr = 0x2F5747C;
@@ -91,6 +99,7 @@ inline UnityEngine_Vector3_o (
     *SYBO_Subway_Characters_CharacterBase__get_WorldBodyCenterPosition)(
     void *_this, // SYBO_Subway_Characters_CharacterBase_o
     void *method);
+;
 
 inline void initFunctions() {
   HPowerupManager__get_instance =
@@ -231,16 +240,17 @@ inline void (*org_HRealPVPRoomManager__CommitGameChat)(
 inline void new_HRealPVPRoomManager__CommitGameChat(
     void *_this, // HRealPVPRoomManager_o
     int32_t chatType, int32_t chatId, System_String_o *content, void *method) {
-  chatType = 3;
-  chatId = 0;
-  newcontent = *content;
-  std::u16string tmp = utf8_to_utf16le(Config::要发送的消息内容, false, NULL);
-  newcontent.fields.m_stringLength = tmp.size();
-  for (int i = 0; i < tmp.size(); i++) {
-    newcontent.fields.m_firstChar[i] = tmp[i];
+  if (Config::自定义消息内容) {
+    chatType = 3;
+    chatId = 0;
+    newcontent = *content;
+    newcontent.set_utf8_to_this(Config::要发送的消息内容);
+    org_HRealPVPRoomManager__CommitGameChat(_this, chatType, chatId,
+                                            &newcontent, method);
+  } else {
+    org_HRealPVPRoomManager__CommitGameChat(_this, chatType, chatId, content,
+                                            method);
   }
-  org_HRealPVPRoomManager__CommitGameChat(_this, chatType, chatId, &newcontent,
-                                          method);
 }
 
 inline void (*org_SYBO_Subway_Characters_Character__ApplyGravity)(void *_this,
@@ -263,13 +273,31 @@ new_PlayerInfo__get_playerNickName(void *_this, // RealPVPManager_o
   System_String_o *result = org_PlayerInfo__get_playerNickName(_this, method);
   if (Config::修改昵称) {
     newNickname = *result;
-    std::u16string tmp = utf8_to_utf16le(Config::修改昵称为, false, NULL);
-    newNickname.fields.m_stringLength = tmp.size();
-    for (int i = 0; i < tmp.size(); i++) {
-      newNickname.fields.m_firstChar[i] = tmp[i];
-    }
+    newNickname.set_utf8_to_this(Config::修改昵称为);
     return &newNickname;
   }
   return result;
+}
+
+inline void (*org_ReportPlayerManager__ReportPlayer)(
+    void *_this, // ReportPlayerManager_o
+    System_String_o *playerId,
+    void *reasonTypes, // System_String_array
+    System_String_o *fightId, int32_t matchType, void *method);
+inline void
+new_ReportPlayerManager__ReportPlayer(void *_this, // ReportPlayerManager_o
+                                      System_String_o *playerId,
+                                      void *reasonTypes, // System_String_array
+                                      System_String_o *fightId,
+                                      int32_t matchType, void *method) {
+  if (Config::十倍举报) {
+    for (int i = 0; i < 10; i++) {
+      org_ReportPlayerManager__ReportPlayer(_this, playerId, reasonTypes,
+                                            fightId, matchType, method);
+    }
+  } else {
+    org_ReportPlayerManager__ReportPlayer(_this, playerId, reasonTypes, fightId,
+                                          matchType, method);
+  }
 }
 } // namespace hooks

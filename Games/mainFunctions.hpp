@@ -33,8 +33,10 @@ public:
   int32_t playerID;
   int32_t characterID;
   System_String_o *name;
+  System_String_o *UID;
   UnityEngine_Vector3_o GamePosition;
   UnityEngine_Vector3_o TransformPosition;
+  bool isAI;
 };
 inline std::vector<Entity> Entities;
 inline void mainFunction() {
@@ -59,6 +61,9 @@ inline void mainFunction() {
             temp_entity.address + structoffset_DummyFields_transformPosition);
         temp_entity.name = RPM<System_String_o *>(
             (uint64_t)temp_entity.address + structoffset_DummyFields_name);
+        temp_entity.UID = RPM<System_String_o*>((uint64_t) temp_entity.address + structoffset_DummyFields_UID);
+        temp_entity.isAI = RPM<bool>((uint64_t)temp_entity.address + structoffset_DummyFields_isAIMode);
+        //debug_log(@"UID: %s", temp_entity.UID->get_utf8_string().c_str());
         Entities.push_back(temp_entity);
       }
     }

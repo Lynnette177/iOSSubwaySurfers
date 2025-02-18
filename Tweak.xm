@@ -156,7 +156,6 @@ static void didFinishLaunching(CFNotificationCenterRef center, void *observer,
     }
   }
   Initialize();
-  // setupMenu();//当patch offset时需要打开因为必须在一加载的时候patch
   //  在这里面设置了越狱状态下menu的patch都是patch哪个可执行文件
   timer(5) {
     SCLAlertView *alert = [[SCLAlertView alloc] initWithNewWindow];

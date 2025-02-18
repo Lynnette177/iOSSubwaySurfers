@@ -48,6 +48,7 @@ void* find_module_by_path(char* machoPath);
 StaticInlineHookBlock* find_hook_block(void* base, uint64_t vaddr);
 
 void* StaticInlineHookFunction(char* machoPath, uint64_t vaddr, void* replace);
+void saveMacho(char* machoPath);
 
 BOOL ActiveCodePatch(char* machoPath, uint64_t vaddr, char* patch);
 BOOL DeactiveCodePatch(char* machoPath, uint64_t vaddr, char* patch);
@@ -61,7 +62,6 @@ MemoryPatch patchOffset(uint64_t offset, std::string hexBytes);
 inline NSString* result_string;
 #define HOOK(x, y, z) \
 result_string = StaticInlineHookPatch(EXCUTABLEPATH, x, nullptr); \
-usleep(50000);\
 if (result_string) { \
      debug_log(@"Hook result: %s", result_string.UTF8String); \
     void* result = StaticInlineHookFunction(EXCUTABLEPATH, x, (void *) y); \
@@ -77,7 +77,6 @@ if (result_string){\
 }
 #define ADDSWITCHPATCH(addr, patch)\
 debug_log(StaticInlineHookPatch(EXCUTABLEPATH, addr, patch));\
-usleep(50000);
 
 #define ACTIVATESWITCHPATCH(addr, patch)\
 if (ActiveCodePatch(EXCUTABLEPATH, addr, patch)){\

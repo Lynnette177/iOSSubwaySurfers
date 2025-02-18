@@ -1,5 +1,6 @@
 #include "hooks.h"
 #include <cstring>
+#include <unistd.h>
 
 // C++ version made by Lavochka
 
@@ -98,8 +99,19 @@ void* rva2data(struct mach_header_64* header, uint64_t rva)
 // C++ version made by Lavochka
 NSMutableData* load_macho_data(NSString* path)
 {
-    NSMutableData* macho = [NSMutableData dataWithContentsOfFile:path];
-    if(!macho) return nil;
+   NSError *error = nil;
+   NSMutableData *macho = nil;
+    NSData *fileData = [NSData dataWithContentsOfFile:path options:0 error:&error];
+
+    if (!fileData) {
+        debug_log(@"Failed to load file. Error: %@", error);
+    } else {
+        macho = [NSMutableData dataWithData:fileData];
+    }
+    if(!macho){
+        debug_log(@"cannot open nsmutableData");
+        return nil;
+    }
     
     UInt32 magic = *(uint32_t*)macho.mutableBytes;
     if(magic==FAT_CIGAM)
@@ -403,6 +415,8 @@ uint64_t calc_patch_hash(uint64_t vaddr, char* patch)
     return [[[NSString stringWithUTF8String:patch] lowercaseString] hash] ^ vaddr;
 }
 
+inline NSMutableData* macho = nil;
+
 NSString* StaticInlineHookPatch(char* machoPath, uint64_t vaddr, char* patch)
 {
     static NSMutableDictionary* gStaticInlineHookMachO = [[NSMutableDictionary alloc] init];
@@ -410,15 +424,22 @@ NSString* StaticInlineHookPatch(char* machoPath, uint64_t vaddr, char* patch)
     NSString* path = [NSBundle.mainBundle.bundlePath stringByAppendingPathComponent:[NSString stringWithUTF8String:machoPath]];
         
     NSString* newPath = gStaticInlineHookMachO[path];
-    
+    /*
     NSMutableData* macho=nil;
 
     if(newPath) {
-        macho = load_macho_data(newPath);
+        debug_log(newPath);
+        while(!macho)
+            macho = load_macho_data(newPath);
         if(!macho) return [NSString stringWithFormat:@"?????(can't find file):  Documents/static-inline-hook/%s", machoPath];
     } else {
         macho = load_macho_data(path);
         if(!macho) return [NSString stringWithFormat:@"??????(can't read file): .app/%s", machoPath];
+    }
+    */
+    if (!macho){
+        macho = load_macho_data(path);
+        debug_log(@"First load macho.");
     }
     
     uint32_t cryptid = 0;
@@ -569,7 +590,7 @@ NSString* StaticInlineHookPatch(char* machoPath, uint64_t vaddr, char* patch)
         hookBlock->patch_hash = calc_patch_hash(vaddr, patch);
     }
     
-
+    /*
     NSString* savePath = [NSString stringWithFormat:@"%@/Documents/static-inline-hook/%s", NSHomeDirectory(), machoPath];
     [NSFileManager.defaultManager createDirectoryAtPath:[NSString stringWithUTF8String:dirname((char*)savePath.UTF8String)] withIntermediateDirectories:YES attributes:nil error:nil];
     
@@ -577,9 +598,21 @@ NSString* StaticInlineHookPatch(char* machoPath, uint64_t vaddr, char* patch)
         return @"??????! can not write to file!";
     
     gStaticInlineHookMachO[path] = savePath;
+    macho = nil;
+    */
     return @"??????, ????????APP?Documents/static-inline-hook???, ?????????????ipa??.app?????????! The offset has not been patched, the patched file will be generated in the Documents/static-inline-hook directory of the APP, please replace all the files in this directory to the .app directory in the ipa and re-sign and reinstall!";
 }
 
+void saveMacho(char* machoPath){
+     NSString* savePath = [NSString stringWithFormat:@"%@/Documents/static-inline-hook/%s", NSHomeDirectory(), machoPath];
+    [NSFileManager.defaultManager createDirectoryAtPath:[NSString stringWithUTF8String:dirname((char*)savePath.UTF8String)] withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    if(![macho writeToFile:savePath atomically:NO])
+        debug_log(@"??????! can not write to file!");
+    
+    debug_log(@"MachoSaved.");
+    macho = nil;
+}
 
 
 // C++ version made by Lavochka

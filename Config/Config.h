@@ -21,6 +21,8 @@ namespace Config {
     inline float 重力修改为 = 200.f;
 
     /*PVP*/
+    inline bool 始终举报 = false;
+    inline bool 十倍举报 = false;
     inline bool 修改昵称 = false;
     inline std::string 修改昵称为 = "";
     inline bool 无视道具 = false;

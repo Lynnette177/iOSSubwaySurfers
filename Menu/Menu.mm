@@ -411,6 +411,10 @@ void LoadMenu() {
   Submenu2_Visual(childVisibilityMap, PageNumber == 2||!Config::加载一次参数,!Config::加载一次参数);
   Submenu3_Server(childVisibilityMap, PageNumber == 3||!Config::加载一次参数,!Config::加载一次参数);
   Submenu4_Settings(childVisibilityMap, PageNumber == 4||!Config::加载一次参数,!Config::加载一次参数);
+  #ifdef DUMP_HOOK
+  saveMacho(EXCUTABLEPATH);//当dumphook的时候，需要在所有菜单执行完之后，才保存macho
+  #endif
+  
   if (begunedPage)
     ImGui::EndChild();
   ChildView(childVisibilityMap,!Config::加载一次参数);

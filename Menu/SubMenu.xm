@@ -156,9 +156,10 @@ void Submenu0_Personal(std::map<std::string, bool> &childVisibilityMap,
                        bool isPage, bool shouldLoad) {
   if (isPage)
     ImGui::Text("信息选项");
-  SimpleToggleButton(childVisibilityMap, ICON_FA_COINS, u8"重新登录",
-                     &Config ::重新登录, isPage,
-                     "开启后，重启游戏进行重新登录，避免因为外挂导致登录弹窗消失", shouldLoad);
+  SimpleToggleButton(
+      childVisibilityMap, ICON_FA_SYNC, u8"重新登录", &Config ::重新登录,
+      isPage, "开启后，重启游戏进行重新登录，避免因为外挂导致登录弹窗消失",
+      shouldLoad);
   ToggleButtonWithOffset(
       childVisibilityMap, ICON_FA_ID_CARD, u8"跳过实名认证", &Config ::实名认证,
       {offset_AntiAddictionManager_HasVerifid}, {(char *)PATCH_RET1}, isPage,
@@ -250,7 +251,17 @@ void Submenu3_Server(std::map<std::string, bool> &childVisibilityMap,
                      bool isPage, bool shouldLoad) {
   if (isPage)
     ImGui::Text("PVP选项");
-  SimpleToggleButton(childVisibilityMap, ICON_FA_BATTERY_FULL, u8"修改昵称",
+  ToggleButtonWithOffset(
+      childVisibilityMap, ICON_FA_FLAG, u8"始终可以举报", &Config ::始终举报,
+      {offset_ReportPlayerManager__CanReportPlayer,
+       offset_ReportPlayerManager__ReportPlayerManager__CanShowReportPlayer,
+       offset_PlayerInfo__get_ReportPlayerDayTimes},
+      {(char *)PATCH_RET1, (char *)PATCH_RET1, (char *)PATCH_RET0}, isPage,
+      "始终可以举报对手", shouldLoad);
+  SimpleToggleButton(childVisibilityMap, ICON_FA_BUG, u8"十倍举报",
+                     &Config ::十倍举报, isPage, "开启后举报1次顶10次",
+                     shouldLoad);
+  SimpleToggleButton(childVisibilityMap, ICON_FA_ID_BADGE, u8"修改昵称",
                      &Config ::修改昵称, isPage, "开启后修改匹配时本人昵称",
                      shouldLoad);
   ToggleButtonWithOffset(childVisibilityMap, ICON_FA_SHIELD_ALT, u8"无视道具",
@@ -489,19 +500,20 @@ void ESP() {
         result &= UVector3toScreenPos(top3, screenSize.y, screen_top3);
         result &= UVector3toScreenPos(top4, screenSize.y, screen_top4);
         debug_log(@"ScreenPos:%f %f", screen_buttom1.x, screen_buttom1.y);
+        uint32_t boxcolor = entity.isAI ? 0xffffffff : 0xff0000ff;
         if (1) {
-          Draw->AddLine(screen_buttom1, screen_buttom2, 0xffffffff, 2);
-          Draw->AddLine(screen_buttom2, screen_buttom3, 0xffffffff, 2);
-          Draw->AddLine(screen_buttom3, screen_buttom4, 0xffffffff, 2);
-          Draw->AddLine(screen_buttom4, screen_buttom1, 0xffffffff, 2);
-          Draw->AddLine(screen_top1, screen_top2, 0xffffffff, 2);
-          Draw->AddLine(screen_top2, screen_top3, 0xffffffff, 2);
-          Draw->AddLine(screen_top3, screen_top4, 0xffffffff, 2);
-          Draw->AddLine(screen_top4, screen_top1, 0xffffffff, 2);
-          Draw->AddLine(screen_buttom1, screen_top1, 0xffffffff, 2);
-          Draw->AddLine(screen_buttom2, screen_top2, 0xffffffff, 2);
-          Draw->AddLine(screen_buttom3, screen_top3, 0xffffffff, 2);
-          Draw->AddLine(screen_buttom4, screen_top4, 0xffffffff, 2);
+          Draw->AddLine(screen_buttom1, screen_buttom2, boxcolor, 2);
+          Draw->AddLine(screen_buttom2, screen_buttom3, boxcolor, 2);
+          Draw->AddLine(screen_buttom3, screen_buttom4, boxcolor, 2);
+          Draw->AddLine(screen_buttom4, screen_buttom1, boxcolor, 2);
+          Draw->AddLine(screen_top1, screen_top2, boxcolor, 2);
+          Draw->AddLine(screen_top2, screen_top3, boxcolor, 2);
+          Draw->AddLine(screen_top3, screen_top4, boxcolor, 2);
+          Draw->AddLine(screen_top4, screen_top1, boxcolor, 2);
+          Draw->AddLine(screen_buttom1, screen_top1, boxcolor, 2);
+          Draw->AddLine(screen_buttom2, screen_top2, boxcolor, 2);
+          Draw->AddLine(screen_buttom3, screen_top3, boxcolor, 2);
+          Draw->AddLine(screen_buttom4, screen_top4, boxcolor, 2);
         } else
           continue;
       }

@@ -44,6 +44,9 @@ bool InstallHooks() {
     HOOK(hookFunctionAddress_PlayerInfo__get_playerNickName,
          hooks::new_PlayerInfo__get_playerNickName,
          hooks::org_PlayerInfo__get_playerNickName);
+    HOOK(hookFunctionAddress_ReportPlayerManager__ReportPlayer,
+         hooks::new_ReportPlayerManager__ReportPlayer,
+         hooks::org_ReportPlayerManager__ReportPlayer);
     return true;
   }
   return false;
@@ -67,6 +70,16 @@ void patch_at_start() {
                PATCH_RET) // 禁用FrontScreen__UploadCheaterPlayerLog
   ONETIMEPATCH(ENCRYPTOFFSET("0x33323F8"),
                PATCH_RET) // 禁用BindWeChatManager__OnLoginShield
+  ONETIMEPATCH(ENCRYPTOFFSET("0x2009D00"),
+               PATCH_RET0) // PlayerInfo__CheckCheaterByDeviceId
+  ONETIMEPATCH(ENCRYPTOFFSET("0x2009E34"),
+               PATCH_RET0) // PlayerInfo__CheckCheaterByCoins
+  ONETIMEPATCH(ENCRYPTOFFSET("0x2009F20"),
+               PATCH_RET0) // PlayerInfo__CheckCheaterByKeys
+  ONETIMEPATCH(ENCRYPTOFFSET("0x2F24958"),
+               PATCH_RET0) // Globals__isCheater
+  ONETIMEPATCH(ENCRYPTOFFSET("0x1F14918"),
+               PATCH_RET0) // PVPModuleMgr__get_CheatState
 }
 
 void Initialize() { //[menu setFrameworkName:EXCUTABLENAME];

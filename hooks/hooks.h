@@ -76,7 +76,8 @@ if (result_string){\
          debug_log(@"OneTime Patch Succeed.");\
 }
 #define ADDSWITCHPATCH(addr, patch)\
-debug_log(StaticInlineHookPatch(EXCUTABLEPATH, addr, patch));\
+result_string = StaticInlineHookPatch(EXCUTABLEPATH, addr, patch);\
+debug_log(result_string);\
 
 #define ACTIVATESWITCHPATCH(addr, patch)\
 if (ActiveCodePatch(EXCUTABLEPATH, addr, patch)){\

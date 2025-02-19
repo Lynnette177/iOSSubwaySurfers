@@ -378,7 +378,7 @@ void ChildView(const std::map<std::string, bool> &childVisibilityMap,
 
         } else if (widgetName == "修改昵称") {
           TextInputMini("将昵称修改为", Config::修改昵称为, false);
-        } else if (widgetName == "修改排名") {
+        } else if (widgetName == "修改全服排名") {
           SliderIntMini("修改排名为", &Config::修改排名为, 1, 100, shouldLoad);
         } else if (widgetName == "自定义消息内容") {
           TextInputMini("将内容修改为", Config::要发送的消息内容, false);

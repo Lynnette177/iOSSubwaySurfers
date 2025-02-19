@@ -52,6 +52,10 @@
   ENCRYPTOFFSET("0x1FC77D8")
 #define hookFunctionAddress_ReportPlayerManager__ReportPlayer                  \
   ENCRYPTOFFSET("0x2142A20")
+#define hookFunctionAddress_RealPVPManager__get_allRank                        \
+  ENCRYPTOFFSET("0x1F52D2C")
+#define hookFunctionAddress_PartyPvpManager__get_allRank                       \
+  ENCRYPTOFFSET("0x20BFF90")
 
 namespace FunctionAddress {
 inline uintptr_t HPowerupManager__get_instance_funcaddr = 0x2F5747C;
@@ -300,4 +304,31 @@ new_ReportPlayerManager__ReportPlayer(void *_this, // ReportPlayerManager_o
                                           matchType, method);
   }
 }
+
+inline int32_t (*org_PartyPvpManager__get_allRank)(
+    void *_this, // PartyPvpManager_o
+    void *method);
+inline int32_t
+new_PartyPvpManager__get_allRank(void *_this, // PartyPvpManager_o
+                                 void *method) {
+  int32_t result = org_PartyPvpManager__get_allRank(_this, method);
+  if (Config::修改排名) {
+    return Config::修改排名为;
+  }
+  return result;
+}
+
+inline int32_t (*org_RealPVPManager__get_allRank)(
+  void *_this, // PartyPvpManager_o
+  void *method);
+inline int32_t
+new_RealPVPManager__get_allRank(void *_this, // PartyPvpManager_o
+                               void *method) {
+int32_t result = org_RealPVPManager__get_allRank(_this, method);
+if (Config::修改排名) {
+  return Config::修改排名为;
+}
+return result;
+}
+
 } // namespace hooks

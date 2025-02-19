@@ -47,6 +47,12 @@ bool InstallHooks() {
     HOOK(hookFunctionAddress_ReportPlayerManager__ReportPlayer,
          hooks::new_ReportPlayerManager__ReportPlayer,
          hooks::org_ReportPlayerManager__ReportPlayer);
+    HOOK(hookFunctionAddress_PartyPvpManager__get_allRank,
+         hooks::new_PartyPvpManager__get_allRank,
+         hooks::org_PartyPvpManager__get_allRank);
+    HOOK(hookFunctionAddress_RealPVPManager__get_allRank,
+         hooks::new_RealPVPManager__get_allRank,
+         hooks::org_RealPVPManager__get_allRank);
     return true;
   }
   return false;

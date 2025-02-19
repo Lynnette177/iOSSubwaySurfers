@@ -24,6 +24,8 @@ namespace Config {
     inline bool 始终举报 = false;
     inline bool 十倍举报 = false;
     inline bool 修改昵称 = false;
+    inline bool 修改排名 = false;
+    inline int 修改排名为 = 100;
     inline std::string 修改昵称为 = "";
     inline bool 无视道具 = false;
     inline bool 双倍充能 = false;

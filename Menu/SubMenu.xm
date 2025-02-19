@@ -264,6 +264,9 @@ void Submenu3_Server(std::map<std::string, bool> &childVisibilityMap,
   SimpleToggleButton(childVisibilityMap, ICON_FA_ID_BADGE, u8"修改昵称",
                      &Config ::修改昵称, isPage, "开启后修改匹配时本人昵称",
                      shouldLoad);
+  SimpleToggleButton(childVisibilityMap, ICON_FA_TROPHY, u8"修改全服排名",
+                     &Config ::修改排名, isPage,
+                     "开启后修改匹配时显示的排名，别人也能看到", shouldLoad);
   ToggleButtonWithOffset(childVisibilityMap, ICON_FA_SHIELD_ALT, u8"无视道具",
                          &Config ::无视道具, {offset_HPFXBase___DefenseCheck},
                          {(char *)PATCH_RET1}, isPage,
@@ -375,6 +378,8 @@ void ChildView(const std::map<std::string, bool> &childVisibilityMap,
 
         } else if (widgetName == "修改昵称") {
           TextInputMini("将昵称修改为", Config::修改昵称为, false);
+        } else if (widgetName == "修改排名") {
+          SliderIntMini("修改排名为", &Config::修改排名为, 1, 100, shouldLoad);
         } else if (widgetName == "自定义消息内容") {
           TextInputMini("将内容修改为", Config::要发送的消息内容, false);
         } else if (widgetName == "修改重力") {

@@ -35,6 +35,8 @@ namespace Config {
     inline std::string 要发送的消息内容 = "";
     inline bool 修改速度 = false;
     inline float 速度修改为 = 8.0f;
+    inline bool 自动使用滑板= false;
+    inline float 使用滑板距离 = 5.f;
 
     /*Modify*/
     inline bool 修改金币 = false;
@@ -49,6 +51,7 @@ namespace Config {
     inline int 修改成多少分 = 10;
     inline bool 修改模型大小 = false;
     inline float 模型大小倍率 = 1.0;
+    inline bool 合法提示 = false;
 
     /*visual*/
     inline bool 显示已开启功能 = false;

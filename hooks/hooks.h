@@ -30,12 +30,8 @@
 #define STATIC_HOOK_CODEPAGE_SIZE PAGE_SIZE
 #define STATIC_HOOK_DATAPAGE_SIZE PAGE_SIZE
 
-// C++ version made by Lavochka
-
 uint64_t va2rva(struct mach_header_64* header, uint64_t va);
-// C++ version made by Lavochka
 void* rva2data(struct mach_header_64* header, uint64_t rva);
-// C++ version made by Lavochka
 NSMutableData* load_macho_data(NSString* path);
 NSMutableData* add_hook_section(NSMutableData* macho);
 bool hex2bytes(char* bytes, unsigned char* buffer);
@@ -48,6 +44,7 @@ void* find_module_by_path(char* machoPath);
 StaticInlineHookBlock* find_hook_block(void* base, uint64_t vaddr);
 
 void* StaticInlineHookFunction(char* machoPath, uint64_t vaddr, void* replace);
+
 void saveMacho(char* machoPath);
 
 BOOL ActiveCodePatch(char* machoPath, uint64_t vaddr, char* patch);

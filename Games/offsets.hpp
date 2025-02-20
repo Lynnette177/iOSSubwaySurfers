@@ -60,22 +60,50 @@
 namespace FunctionAddress {
 inline uintptr_t HPowerupManager__get_instance_funcaddr = 0x2F5747C;
 inline uintptr_t HPowerupManager__IncEnergy_funcaddr = 0x2F6B8F4;
+inline uintptr_t HPowerupManager__CanReleaseEnergy_addr = 0x2F6FA0C;
+inline uintptr_t HPowerupManager__ReleaseEnergy_addr = 0x2F6FB38;
+
 inline uintptr_t PlayerInfo__set_NewTreasureKey_funcaddr = 0x1fec5f8;
 inline uintptr_t SYBO_Subway_Characters_Character__get_Instance_Addr =
     0x2235eb4;
+inline uintptr_t SYBO_Subway_Characters_CharacterBase__get_runningTime_addr =
+    0x22478B0;
 inline uintptr_t UnityEngine_Camera__get_main_funcaddr = 0x430BC54;
 inline uintptr_t UnityEngine_Camera__WorldToScreenPoint_addr = 0x430ADD4;
 inline uintptr_t DummyMgr__get_allDummy_addr = 0x2DED138;
 inline uintptr_t DummyMgr__get_Instance_addr = 0x2DECF78;
+inline uintptr_t PhotonNetwork__get_otherPlayers_addr = 0x1F7485C;
+inline uintptr_t PhotonPlayer__get_ID_addr = 0x1f76198;
+inline uintptr_t PhotonPlayer__get_UserId_addr = 0x1f80424;
+inline uintptr_t NetDirector__PostRoom_EndGame_addr = 0x347fec4;
+inline uintptr_t OnlineSettings__get_instance = 0x352F6B8;
+inline uintptr_t OnlineSettings__get_RealPvpCheatTime_addr = 0x353E03C;
+inline uintptr_t PVPModuleMgr__get_Instance_addr = 0x1f14228;
+inline uintptr_t PVPModuleMgr__get_ROUTE_LEGNGTH_addr = 0x1f14180;
+inline uintptr_t BindWeChatManager__get_Instance_addr = 0x3331234;
+
 inline void initFunctionAddress(uintptr_t base) {
   HPowerupManager__IncEnergy_funcaddr += base;
   HPowerupManager__get_instance_funcaddr += base;
+  HPowerupManager__CanReleaseEnergy_addr += base;
+  HPowerupManager__ReleaseEnergy_addr += base;
+
   PlayerInfo__set_NewTreasureKey_funcaddr += base;
   SYBO_Subway_Characters_Character__get_Instance_Addr += base;
+  SYBO_Subway_Characters_CharacterBase__get_runningTime_addr += base;
   UnityEngine_Camera__get_main_funcaddr += base;
   UnityEngine_Camera__WorldToScreenPoint_addr += base;
   DummyMgr__get_Instance_addr += base;
   DummyMgr__get_allDummy_addr += base;
+  PhotonNetwork__get_otherPlayers_addr += base;
+  PhotonPlayer__get_ID_addr += base;
+  PhotonPlayer__get_UserId_addr += base;
+  NetDirector__PostRoom_EndGame_addr += base;
+  OnlineSettings__get_instance += base;
+  OnlineSettings__get_RealPvpCheatTime_addr += base;
+  PVPModuleMgr__get_Instance_addr += base;
+  PVPModuleMgr__get_ROUTE_LEGNGTH_addr += base;
+  BindWeChatManager__get_Instance_addr += base;
 }
 } // namespace FunctionAddress
 
@@ -90,8 +118,17 @@ inline void *(*HPowerupManager__get_instance)(void *method);
 inline void (*HPowerupManager__IncEnergy)(void *_this, void *method);
 inline void (*PlayerInfo__set_NewTreasureKey)(void *_this, int32_t value,
                                               void *method);
+inline bool (*HPowerupManager__CanReleaseEnergy)(
+    void *_this /*HPowerupManager_o **/, void *method);
+inline void (*HPowerupManager__ReleaseEnergy)(
+    void *_this /*HPowerupManager_o **/, void *method);
+
 inline void *(*SYBO_Subway_Characters_Character__get_Instance)(
     void *method); // SYBO_Subway_Characters_Character_o
+inline float (*SYBO_Subway_Characters_CharacterBase__get_runningTime)(
+    void *_this, // SYBO_Subway_Characters_CharacterBase_o
+    void *method);
+
 inline void *(*UnityEngine_Camera__get_main)(void *method);
 inline UnityEngine_Vector3_o (*UnityEngine_Camera__WorldToScreenPoint)(
     void *_this, // UnityEngine_Camera_o
@@ -103,7 +140,24 @@ inline UnityEngine_Vector3_o (
     *SYBO_Subway_Characters_CharacterBase__get_WorldBodyCenterPosition)(
     void *_this, // SYBO_Subway_Characters_CharacterBase_o
     void *method);
-;
+inline PhotonPlayer_array *(*PhotonNetwork__get_otherPlayers)(void *method);
+inline int32_t (*PhotonPlayer__get_ID)(PhotonPlayer_o *_this, void *method);
+inline System_String_o *(*PhotonPlayer__get_UserId)(PhotonPlayer_o *_this,
+                                                    void *method);
+inline void (*NetDirector__PostRoom_EndGame)(double delaySecond,
+                                             int32_t playerID,
+                                             System_String_o *uid, bool endLine,
+                                             void *method);
+inline void *(*OnlineSettings__get_instance)(
+    void *method); // 返回OnlineSettings_o *
+inline int32_t (*OnlineSettings__get_RealPvpCheatTime)(
+    void *_this /*OnlineSettings_o* */, void *method);
+
+inline void *(*PVPModuleMgr__get_Instance)(void *method); // PVPModuleMgr_o *
+inline float (*PVPModuleMgr__get_ROUTE_LEGNGTH)(void *method);
+
+inline void * /*BindWeChatManager_o **/ (*BindWeChatManager__get_Instance)(
+    void *method);
 
 inline void initFunctions() {
   HPowerupManager__get_instance =
@@ -112,12 +166,25 @@ inline void initFunctions() {
   HPowerupManager__IncEnergy =
       reinterpret_cast<decltype(HPowerupManager__IncEnergy)>(
           FunctionAddress::HPowerupManager__IncEnergy_funcaddr);
+  HPowerupManager__CanReleaseEnergy =
+      reinterpret_cast<decltype(HPowerupManager__CanReleaseEnergy)>(
+          FunctionAddress::HPowerupManager__CanReleaseEnergy_addr);
+  HPowerupManager__ReleaseEnergy =
+      reinterpret_cast<decltype(HPowerupManager__ReleaseEnergy)>(
+          FunctionAddress::HPowerupManager__ReleaseEnergy_addr);
+
   PlayerInfo__set_NewTreasureKey =
       reinterpret_cast<decltype(PlayerInfo__set_NewTreasureKey)>(
           FunctionAddress::PlayerInfo__set_NewTreasureKey_funcaddr);
+
   SYBO_Subway_Characters_Character__get_Instance = reinterpret_cast<
       decltype(SYBO_Subway_Characters_Character__get_Instance)>(
       FunctionAddress::SYBO_Subway_Characters_Character__get_Instance_Addr);
+  SYBO_Subway_Characters_CharacterBase__get_runningTime = reinterpret_cast<
+      decltype(SYBO_Subway_Characters_CharacterBase__get_runningTime)>(
+      FunctionAddress::
+          SYBO_Subway_Characters_CharacterBase__get_runningTime_addr);
+
   UnityEngine_Camera__get_main =
       reinterpret_cast<decltype(UnityEngine_Camera__get_main)>(
           FunctionAddress::UnityEngine_Camera__get_main_funcaddr);
@@ -128,6 +195,33 @@ inline void initFunctions() {
       FunctionAddress::DummyMgr__get_Instance_addr);
   DummyMgr__get_allDummy = reinterpret_cast<decltype(DummyMgr__get_allDummy)>(
       FunctionAddress::DummyMgr__get_allDummy_addr);
+  PhotonNetwork__get_otherPlayers =
+      reinterpret_cast<decltype(PhotonNetwork__get_otherPlayers)>(
+          FunctionAddress::PhotonNetwork__get_otherPlayers_addr);
+  PhotonPlayer__get_ID = reinterpret_cast<decltype(PhotonPlayer__get_ID)>(
+      FunctionAddress::PhotonPlayer__get_ID_addr);
+  PhotonPlayer__get_UserId =
+      reinterpret_cast<decltype(PhotonPlayer__get_UserId)>(
+          FunctionAddress::PhotonPlayer__get_UserId_addr);
+  NetDirector__PostRoom_EndGame =
+      reinterpret_cast<decltype(NetDirector__PostRoom_EndGame)>(
+          FunctionAddress::NetDirector__PostRoom_EndGame_addr);
+  OnlineSettings__get_instance =
+      reinterpret_cast<decltype(OnlineSettings__get_instance)>(
+          FunctionAddress::OnlineSettings__get_instance);
+  OnlineSettings__get_RealPvpCheatTime =
+      reinterpret_cast<decltype(OnlineSettings__get_RealPvpCheatTime)>(
+          FunctionAddress::OnlineSettings__get_RealPvpCheatTime_addr);
+
+  PVPModuleMgr__get_Instance =
+      reinterpret_cast<decltype(PVPModuleMgr__get_Instance)>(
+          FunctionAddress::PVPModuleMgr__get_Instance_addr);
+  PVPModuleMgr__get_ROUTE_LEGNGTH =
+      reinterpret_cast<decltype(PVPModuleMgr__get_ROUTE_LEGNGTH)>(
+          FunctionAddress::PVPModuleMgr__get_ROUTE_LEGNGTH_addr);
+  BindWeChatManager__get_Instance =
+      reinterpret_cast<decltype(BindWeChatManager__get_Instance)>(
+          FunctionAddress::BindWeChatManager__get_Instance_addr);
 }
 } // namespace GameFunction
 
@@ -139,6 +233,34 @@ inline void addHoverboardEnergy() {
 }
 inline void setNewTreasureKey(void *PlayerInfoInstance, int32_t value) {
   GameFunction::PlayerInfo__set_NewTreasureKey(PlayerInfoInstance, value, 0);
+}
+inline int32_t get_min_pvp_time() {
+  void *OnlineSettings = GameFunction::OnlineSettings__get_instance(NULL);
+  if (!OnlineSettings)
+    return 0;
+  int32_t result =
+      GameFunction::OnlineSettings__get_RealPvpCheatTime(OnlineSettings, NULL);
+  return result;
+}
+inline int getCheatStatus() {
+  auto BindWechatManager = GameFunction::BindWeChatManager__get_Instance(NULL);
+  if (!BindWechatManager)
+    return 0;
+  uintptr_t BindWechatManager_fields = (uintptr_t)BindWechatManager + 0x10;
+  bool loginShield =
+      RPM<bool>(BindWechatManager_fields +
+                structOffset_BindWeChatManager_fields_loginshield);
+  bool payShield = RPM<bool>(BindWechatManager_fields +
+                             structOffset_BindWeChatManager_fields_payshield);
+  return (payShield << 1) | loginShield;
+}
+inline void check_and_user_hoverboard_pvp() {
+  void *HPowerupManager = GameFunction::HPowerupManager__get_instance(NULL);
+  bool canuse =
+      GameFunction::HPowerupManager__CanReleaseEnergy(HPowerupManager, NULL);
+  if (canuse) {
+    GameFunction::HPowerupManager__ReleaseEnergy(HPowerupManager, NULL);
+  }
 }
 } // namespace CustomFunctions
 
@@ -319,16 +441,15 @@ new_PartyPvpManager__get_allRank(void *_this, // PartyPvpManager_o
 }
 
 inline int32_t (*org_RealPVPManager__get_allRank)(
-  void *_this, // PartyPvpManager_o
-  void *method);
-inline int32_t
-new_RealPVPManager__get_allRank(void *_this, // PartyPvpManager_o
-                               void *method) {
-int32_t result = org_RealPVPManager__get_allRank(_this, method);
-if (Config::修改排名) {
-  return Config::修改排名为;
-}
-return result;
+    void *_this, // PartyPvpManager_o
+    void *method);
+inline int32_t new_RealPVPManager__get_allRank(void *_this, // PartyPvpManager_o
+                                               void *method) {
+  int32_t result = org_RealPVPManager__get_allRank(_this, method);
+  if (Config::修改排名) {
+    return Config::修改排名为;
+  }
+  return result;
 }
 
 } // namespace hooks

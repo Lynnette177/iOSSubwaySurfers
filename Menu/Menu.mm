@@ -112,13 +112,13 @@ void SetStyles() {
   ImGuiStyle *style = &ImGui::GetStyle();
 
   style->WindowBorderSize = 0;
-  style->WindowMinSize = ImVec2(400, 260);
+  style->WindowMinSize = ImVec2(350, 270);
   style->FrameRounding = 5.0f;
   style->GrabRounding = 5.0f;
   style->WindowRounding = 5.0f;
   style->PopupRounding = 5.0f;
   style->ChildRounding = 5.0f;
-  style->ScrollbarSize = 15;
+  style->ScrollbarSize = 25;
 
   style->Colors[ImGuiCol_SeparatorHovered] = ImColor(0, 0, 0, 0);
   style->Colors[ImGuiCol_SeparatorActive] = ImColor(0, 0, 0, 0);
@@ -191,6 +191,57 @@ void SetStyles() {
   ImGui::PushStyleColor(
       ImGuiCol_ScrollbarGrabHovered,
       IM_COL32(GrabColor[0], GrabColor[1], GrabColor[2], 255));
+}
+
+void SetRigelStyle() {
+  ImGuiStyle *style = &ImGui::GetStyle();
+
+  style->WindowBorderSize = 0;
+  style->WindowMinSize = ImVec2(400, 260);
+  style->FrameRounding = 5.0f;
+  style->GrabRounding = 5.0f;
+  style->WindowRounding = 5.0f;
+  style->PopupRounding = 5.0f;
+  style->ChildRounding = 5.0f;
+  style->ScrollbarSize = 15;
+  auto colors = style->Colors;
+  colors[ImGuiCol_Text] = ImVec4(0.84f, 0.84f, 0.84f, 1.00f);
+  colors[ImGuiCol_WindowBg] = ImVec4(0.22f, 0.22f, 0.22f, 0.9f);
+  colors[ImGuiCol_ChildBg] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
+  colors[ImGuiCol_PopupBg] = ImVec4(0.09f, 0.09f, 0.09f, 1.00f);
+  colors[ImGuiCol_Border] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+  colors[ImGuiCol_BorderShadow] = ImVec4(0.10f, 0.10f, 0.10f, 0.00f);
+  colors[ImGuiCol_FrameBg] = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+  colors[ImGuiCol_FrameBgHovered] = ImVec4(0.47f, 0.47f, 0.47f, 1.00f);
+  colors[ImGuiCol_FrameBgActive] = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
+  colors[ImGuiCol_TitleBg] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);
+  colors[ImGuiCol_TitleBgActive] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_MenuBarBg] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);
+  colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+  colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+  colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
+  colors[ImGuiCol_CheckMark] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_SliderGrab] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_SliderGrabActive] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_Button] = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+  colors[ImGuiCol_ButtonHovered] = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+  colors[ImGuiCol_ButtonActive] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_Header] = ImVec4(0.27f, 0.27f, 0.27f, 1.00f);
+  colors[ImGuiCol_HeaderHovered] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_HeaderActive] = ImVec4(0.27f, 0.27f, 0.27f, 1.00f);
+  colors[ImGuiCol_Separator] = ImVec4(0.18f, 0.18f, 0.18f, 1.00f);
+  colors[ImGuiCol_SeparatorHovered] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_SeparatorActive] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_ResizeGrip] = ImVec4(0.54f, 0.54f, 0.54f, 1.00f);
+  colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_ResizeGripActive] = ImVec4(0.19f, 0.39f, 0.69f, 1.00f);
+  colors[ImGuiCol_Tab] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);
+  colors[ImGuiCol_TabHovered] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+  colors[ImGuiCol_TabActive] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
+  colors[ImGuiCol_PlotHistogram] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.20f, 0.39f, 0.69f, 1.00f);
+  colors[ImGuiCol_TextSelectedBg] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
+  colors[ImGuiCol_NavHighlight] = ImVec4(0.28f, 0.45f, 0.70f, 1.00f);
 }
 void LoadMenu() {
   static dispatch_once_t onceToken;
@@ -406,21 +457,29 @@ void LoadMenu() {
     begunedPage = true;
     ImGui::BeginChild("##MainContent", mainContentSize, true);
   }
-  Submenu0_Personal(childVisibilityMap, PageNumber == 0 ||!Config::加载一次参数,!Config::加载一次参数);
-  Submenu1_Aim(childVisibilityMap, PageNumber == 1||!Config::加载一次参数,!Config::加载一次参数);
-  Submenu2_Visual(childVisibilityMap, PageNumber == 2||!Config::加载一次参数,!Config::加载一次参数);
-  Submenu3_Server(childVisibilityMap, PageNumber == 3||!Config::加载一次参数,!Config::加载一次参数);
-  Submenu4_Settings(childVisibilityMap, PageNumber == 4||!Config::加载一次参数,!Config::加载一次参数);
-  #ifdef DUMP_HOOK
-  saveMacho(EXCUTABLEPATH);//当dumphook的时候，需要在所有菜单执行完之后，才保存macho
-  #endif
-  
+  Submenu0_Personal(childVisibilityMap,
+                    PageNumber == 0 || !Config::加载一次参数,
+                    !Config::加载一次参数);
+  Submenu1_Aim(childVisibilityMap, PageNumber == 1 || !Config::加载一次参数,
+               !Config::加载一次参数);
+  Submenu2_Visual(childVisibilityMap, PageNumber == 2 || !Config::加载一次参数,
+                  !Config::加载一次参数);
+  Submenu3_Server(childVisibilityMap, PageNumber == 3 || !Config::加载一次参数,
+                  !Config::加载一次参数);
+  Submenu4_Settings(childVisibilityMap,
+                    PageNumber == 4 || !Config::加载一次参数,
+                    !Config::加载一次参数);
+#ifdef DUMP_HOOK
+  saveMacho(
+      EXCUTABLEPATH); // 当dumphook的时候，需要在所有菜单执行完之后，才保存macho
+#endif
+
   if (begunedPage)
     ImGui::EndChild();
-  ChildView(childVisibilityMap,!Config::加载一次参数);
+  ChildView(childVisibilityMap, !Config::加载一次参数);
   ImGui::Columns(1);
   LightTheme();
-  if (!Config::加载一次参数){
+  if (!Config::加载一次参数) {
     Config::加载一次参数 = true;
   }
 }

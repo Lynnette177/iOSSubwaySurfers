@@ -2,8 +2,6 @@
 #include <cstring>
 #include <unistd.h>
 
-// C++ version made by Lavochka
-
 uint64_t va2rva(struct mach_header_64* header, uint64_t va)
 {
     uint64_t rva = va;
@@ -25,20 +23,16 @@ uint64_t va2rva(struct mach_header_64* header, uint64_t va)
                 header_vaddr = seg->vmaddr;
             }
         }
-        
         lc = (struct load_command *) ((char *)lc + lc->cmdsize);
     }
-    
     if(header_vaddr != -1) {
         //debug_log(@"header_vaddr=%p", header_vaddr);
         rva -= header_vaddr;
     }
-    
     //debug_log(@"va2rva %p=>%p", va, rva);
-    
     return rva;
 }
-// C++ version made by Lavochka
+
 void* rva2data(struct mach_header_64* header, uint64_t rva)
 {
     uint64_t header_vaddr = -1;
@@ -96,12 +90,12 @@ void* rva2data(struct mach_header_64* header, uint64_t rva)
     return NULL;
 }
 
-// C++ version made by Lavochka
+
 NSMutableData* load_macho_data(NSString* path)
 {
    NSError *error = nil;
    NSMutableData *macho = nil;
-    NSData *fileData = [NSData dataWithContentsOfFile:path options:0 error:&error];
+   NSData *fileData = [NSData dataWithContentsOfFile:path options:0 error:&error];
 
     if (!fileData) {
         debug_log(@"Failed to load file. Error: %@", error);
@@ -285,7 +279,7 @@ NSMutableData* add_hook_section(NSMutableData* macho)
     
     linkedit_seg->fileoff = macho.length+text_seg.filesize+data_seg.filesize;
     linkedit_seg->vmaddr = vm_end+text_seg.vmsize+data_seg.vmsize;
-    // C++ version made by Lavochka
+
     // fix load_command
     struct load_command *load_cmd = (struct load_command *)((uint64_t)header + sizeof(*header));
     for (int i = 0; i < header->ncmds;
@@ -568,7 +562,7 @@ NSString* StaticInlineHookPatch(char* machoPath, uint64_t vaddr, char* patch)
                 targetData = rva2data(header, targetRVA);
             }
             
-            debug_log(@"found empty StaticInlineHookBlock %d %p=>%p ", i, targetRVA, targetData);
+            debug_log(@"found empty StaticInlineHookBlock No.:%d %p=>%p ", i, targetRVA, targetData);
             
             break;
         }

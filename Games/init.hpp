@@ -86,6 +86,9 @@ void patch_at_start() {
                PATCH_RET0) // Globals__isCheater
   ONETIMEPATCH(ENCRYPTOFFSET("0x1F14918"),
                PATCH_RET0) // PVPModuleMgr__get_CheatState
+  ONETIMEPATCH(ENCRYPTOFFSET("0x1F149A0"), PATCH_RET) //PVPModuleMgr__set_CheatState
+  ONETIMEPATCH(ENCRYPTOFFSET("0x353648C"), PATCH_RET0)//OnlineSettings__get_CheckCheatAPP
+  ONETIMEPATCH(ENCRYPTOFFSET("0x35377BC"), PATCH_RET0) //OnlineSettings__get_CheckCheatAccumulate 
 }
 
 void Initialize() { //[menu setFrameworkName:EXCUTABLENAME];

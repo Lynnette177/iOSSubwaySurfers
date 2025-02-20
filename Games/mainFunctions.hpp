@@ -3,28 +3,14 @@
 #include "offsets.hpp"
 #include <cstdint>
 #include <vector>
-template <typename WPMType> inline bool WPM(uintptr_t Address, WPMType Buffer) {
-  if (!Address) {
-    return false;
-  }
-  *(WPMType *)Address = Buffer;
-  return true;
-}
-template <typename RPMType> inline RPMType RPM(uintptr_t Address) {
-  RPMType Buffer = RPMType(); // Initialize Buffer to a default value
-  if (!Address) {
-    return Buffer;
-  }
-  Buffer = *(RPMType *)Address;
-  return Buffer;
-}
+
 inline bool UVector3toScreenPos(UnityEngine_Vector3_o in, float ScreenHeight,
                                 ImVec2 &out) {
   if (in.fields.z < -0.0001)
     return false;
   in.fields.x /= Config::screenScale;
   out.x = in.fields.x;
-  out.y = (ScreenHeight - in.fields.y)/ Config::screenScale;
+  out.y = (ScreenHeight - in.fields.y) / Config::screenScale;
   return true;
 }
 class Entity {
@@ -38,8 +24,12 @@ public:
   UnityEngine_Vector3_o TransformPosition;
   bool isAI;
 };
+inline void* local_entity_address = 0;
+inline uintptr_t local_entity_field_address = 0;
 inline std::vector<Entity> Entities;
 inline void mainFunction() {
+  local_entity_address = GameFunction::SYBO_Subway_Characters_Character__get_Instance(NULL);
+  local_entity_field_address = ((uintptr_t)local_entity_address + 0x10);
   Entities = {};
   void *DummyManager = GameFunction::DummyMgr__get_Instance(NULL);
   if (DummyManager) {
@@ -61,11 +51,32 @@ inline void mainFunction() {
             temp_entity.address + structoffset_DummyFields_transformPosition);
         temp_entity.name = RPM<System_String_o *>(
             (uint64_t)temp_entity.address + structoffset_DummyFields_name);
-        temp_entity.UID = RPM<System_String_o*>((uint64_t) temp_entity.address + structoffset_DummyFields_UID);
-        temp_entity.isAI = RPM<bool>((uint64_t)temp_entity.address + structoffset_DummyFields_isAIMode);
-        //debug_log(@"UID: %s", temp_entity.UID->get_utf8_string().c_str());
+        temp_entity.UID = RPM<System_String_o *>((uint64_t)temp_entity.address +
+                                                 structoffset_DummyFields_UID);
+        temp_entity.isAI = RPM<bool>((uint64_t)temp_entity.address +
+                                     structoffset_DummyFields_isAIMode);
+        // debug_log(@"UID: %s", temp_entity.UID->get_utf8_string().c_str());
         Entities.push_back(temp_entity);
       }
+      /*
+      PhotonPlayer_array *PhotonArray_ptr =
+          GameFunction::PhotonNetwork__get_otherPlayers(NULL);
+      PhotonPlayer_array PhotonArray = *PhotonArray_ptr;
+      debug_log(@"Photon Player Count:%d", PhotonArray.max_length);
+      for (int i = 0; i < PhotonArray.max_length; i++) {
+        PhotonPlayer_o *PhotonPlayer = PhotonArray.m_Items[i];
+        if (PhotonPlayer) {
+          debug_log(@"PhotonPlayer Address: %p", PhotonPlayer);
+          int32_t PID = GameFunction::PhotonPlayer__get_ID(PhotonPlayer, NULL);
+          System_String_o *UID_ptr =
+              GameFunction::PhotonPlayer__get_UserId(PhotonPlayer, NULL);
+          System_String_o UID = *UID_ptr;
+          debug_log(@"PID:%d UID:%s", PID, UID.get_utf8_string().c_str());
+          GameFunction::NetDirector__PostRoom_EndGame(0.0, PID, UID_ptr, 0,
+                                                      NULL);
+        }
+      }
+        */
     }
   }
 }

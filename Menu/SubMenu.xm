@@ -1,4 +1,6 @@
 #import "SubMenu.h"
+#include <cstdint>
+#include <cstdio>
 #include <string>
 bool showLogs = false;
 bool lightTheme = true;
@@ -154,8 +156,25 @@ bool SimpleToggleButton(std::map<std::string, bool> &childVisibilityMap,
 }
 void Submenu0_Personal(std::map<std::string, bool> &childVisibilityMap,
                        bool isPage, bool shouldLoad) {
-  if (isPage)
+  if (isPage) {
     ImGui::Text("信息选项");
+    {
+      ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(64, 175, 255, 255));
+      int cheatStatus = CustomFunctions::getCheatStatus();
+      ImGui::Text("账号状态：");
+      if (cheatStatus & 0b1) {
+        ImGui::Text("loginShield: 封禁");
+      } else {
+        ImGui::Text("loginShield: 未封禁");
+      }
+      if (cheatStatus & 0b10) {
+        ImGui::Text("payShield: 封禁");
+      } else {
+        ImGui::Text("payShield: 未封禁");
+      }
+      ImGui::PopStyleColor();
+    }
+  }
   SimpleToggleButton(
       childVisibilityMap, ICON_FA_SYNC, u8"重新登录", &Config ::重新登录,
       isPage, "开启后，重启游戏进行重新登录，避免因为外挂导致登录弹窗消失",
@@ -231,6 +250,10 @@ void Submenu2_Visual(std::map<std::string, bool> &childVisibilityMap,
                      bool isPage, bool shouldLoad) {
   if (isPage)
     ImGui::Text("视觉选项");
+  SimpleToggleButton(childVisibilityMap, ICON_FA_EXCLAMATION, u8"合法提示",
+                     &Config ::合法提示, isPage,
+                     "开启后将在PVP中展示合法时间和预估时间，来帮助演技。",
+                     shouldLoad);
   SimpleToggleButton(
       childVisibilityMap, ICON_FA_DOVE, u8"鸟瞰视角", &Config ::上帝视角,
       isPage,
@@ -277,6 +300,13 @@ void Submenu3_Server(std::map<std::string, bool> &childVisibilityMap,
       "开启后拾取滑板能量翻倍。注意使用太多速度太快可能被判定作弊", shouldLoad);
   SimpleToggleButton(childVisibilityMap, ICON_FA_PLUG, u8"滑板自动充能",
                      &Config ::自动充能, isPage, "开启后滑板能量自动增加",
+                     shouldLoad);
+  SimpleToggleButton(childVisibilityMap, ICON_FA_PLUG, u8"自动使用滑板",
+                     &Config ::自动使用滑板, isPage,
+                     "开启后根据其他玩家的位置，自动使用滑板。可以自定义距离，"
+                     "当游戏进度大于11%"
+                     "并且如果有玩家领先或者落后小于该距离，滑板可用时自动使用"
+                     "滑板。仅限于道具赛，不适用于派对。",
                      shouldLoad);
   SimpleToggleButton(childVisibilityMap, ICON_FA_ROCKET, u8"疯狂加速",
                      &Config ::疯狂加速, isPage,
@@ -388,6 +418,9 @@ void ChildView(const std::map<std::string, bool> &childVisibilityMap,
         } else if (widgetName == "修改速度") {
           SliderFloatMini("速度修改为", &Config::速度修改为, 0.01f, 1700.f,
                           shouldLoad);
+        } else if (widgetName == "自动使用滑板") {
+          SliderFloatMini("当玩家落后<?米", &Config::使用滑板距离, 0.01f, 30.f,
+                          shouldLoad);
         } else if (widgetName == "显示日志") {
           ImGui::Text(ICON_FA_INFO_CIRCLE);
           ImGui::SameLine();
@@ -424,6 +457,13 @@ void ESP() {
   ImDrawList *Draw = ImGui::GetBackgroundDrawList();
   ImVec2 screenSize = ImGui::GetIO().DisplaySize;
 
+  UnityEngine_Vector3_o local_pos;
+  if (local_entity_address) {
+    local_pos = RPM<UnityEngine_Vector3_o>(
+        local_entity_field_address + structoffset_DummyFields_gamePosition);
+  }
+  size_t entityCount = Entities.size();
+  float frontest_player_dis_from_me = 9999;
   if (Config::显示已开启功能) {
     int textw = 0;
     int texth = 0;
@@ -456,6 +496,12 @@ void ESP() {
       auto Camera = GameFunction::UnityEngine_Camera__get_main(NULL);
       if (Camera) {
         UnityEngine_Vector3_o centerPos = entity.TransformPosition;
+
+        float delta_to_me = local_pos.fields.z - centerPos.fields.z;
+        if (delta_to_me < frontest_player_dis_from_me / UnityUnitToGame) {
+          frontest_player_dis_from_me = delta_to_me * UnityUnitToGame;
+        }
+
         debug_log(@"Position %f %f %f", centerPos.fields.x, centerPos.fields.y,
                   centerPos.fields.z);
         UnityEngine_Vector3_o buttom1 =
@@ -471,6 +517,13 @@ void ESP() {
         UnityEngine_Vector3_o top3 = buttom3 + UnityEngine_Vector3_o(0, 12, 0);
         UnityEngine_Vector3_o top4 = buttom4 + UnityEngine_Vector3_o(0, 12, 0);
 
+        UnityEngine_Vector3_o center_root_screen_pos =
+            GameFunction::UnityEngine_Camera__WorldToScreenPoint(
+                Camera, centerPos, 2, 0);
+        if (center_root_screen_pos.fields.z < 0) {
+          // 摄像机后不绘制
+          continue;
+        }
         buttom1 = GameFunction::UnityEngine_Camera__WorldToScreenPoint(
             Camera, buttom1, 2, 0);
         buttom2 = GameFunction::UnityEngine_Camera__WorldToScreenPoint(
@@ -522,6 +575,76 @@ void ESP() {
         } else
           continue;
       }
+    }
+  }
+
+  if (entityCount == 1 || entityCount == 2) { // 如果是普通的道具赛PVP
+    int32_t min_legal_time = CustomFunctions::get_min_pvp_time();
+    float current_runningTime = 0;
+    float RunningPercentage = 0;
+    float routeLength = 0;
+    float predict_finish = 0;
+    if (local_entity_address) {
+      current_runningTime =
+          GameFunction::SYBO_Subway_Characters_CharacterBase__get_runningTime(
+              local_entity_address, NULL);
+      routeLength = GameFunction::PVPModuleMgr__get_ROUTE_LEGNGTH(NULL);
+      predict_finish = current_runningTime / (local_pos.fields.z / routeLength);
+      RunningPercentage = local_pos.fields.z / routeLength * 100.0f;
+    }
+    if (frontest_player_dis_from_me > 9998)
+      frontest_player_dis_from_me = 0;
+    static char legalTime_buffer[128] = {};
+    static char runningTime_buffer[128] = {};
+    static char compeleted_buffer[128] = {};
+    static char predict_finish_buffer[128] = {};
+    static char closest_player_buffer[128] = {};
+
+    if (Config::自动使用滑板) {
+      if (RunningPercentage > 11.f && RunningPercentage < 99.9f &&
+          frontest_player_dis_from_me < Config::使用滑板距离) {
+        CustomFunctions::check_and_user_hoverboard_pvp();
+      }
+    }
+
+    if (Config::合法提示) {
+      std::sprintf(legalTime_buffer, "最快合法时间:%d秒", min_legal_time);
+      std::sprintf(runningTime_buffer, "当前已经用时:%.2f秒",
+                   current_runningTime);
+      std::sprintf(compeleted_buffer, "已完成: %.2f %%", RunningPercentage);
+      std::sprintf(predict_finish_buffer, "预估完成时间: %.2f秒",
+                   predict_finish);
+      if (frontest_player_dis_from_me > 0.00001f)
+        std::sprintf(closest_player_buffer, "身后最近玩家: %.2f米",
+                     frontest_player_dis_from_me);
+      else
+        std::sprintf(closest_player_buffer, "前方最近玩家: %.2f米",
+                     -frontest_player_dis_from_me);
+
+      ImVec2 textSize = ImGui::CalcTextSize(predict_finish_buffer);
+      ImVec2 rectSize = ImVec2(textSize.x + 10, textSize.y * 5 + 10);
+      ImVec2 rectPos =
+          ImVec2((screenSize.x - rectSize.x * 2) / 2 / Config::screenScale, 20);
+      Draw->AddRectFilled(
+          rectPos, ImVec2(rectPos.x + rectSize.x, rectPos.y + rectSize.y),
+          IM_COL32(0, 0, 0, 150), 4);
+      ImVec2 textPos = ImVec2(rectPos.x + 5, rectPos.y + 5);
+      Draw->AddText(textPos, IM_COL32(255, 255, 255, 255), legalTime_buffer);
+      textPos.y += textSize.y;
+      Draw->AddText(textPos, IM_COL32(255, 255, 255, 255), runningTime_buffer);
+      textPos.y += textSize.y;
+      Draw->AddText(textPos, IM_COL32(255, 255, 255, 255), compeleted_buffer);
+      textPos.y += textSize.y;
+      if (predict_finish - min_legal_time < 10)
+        Draw->AddText(textPos, IM_COL32(255, 0, 0, 255), predict_finish_buffer);
+      else if (predict_finish - min_legal_time < 20)
+        Draw->AddText(textPos, IM_COL32(0, 255, 0, 255), predict_finish_buffer);
+      else
+        Draw->AddText(textPos, IM_COL32(255, 255, 255, 255),
+                      predict_finish_buffer);
+      textPos.y += textSize.y;
+      Draw->AddText(textPos, IM_COL32(255, 255, 255, 255),
+                    closest_player_buffer);
     }
   }
 }

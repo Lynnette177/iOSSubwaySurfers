@@ -6,6 +6,25 @@
 #include <string>
 #include <vector>
 
+#define UnityUnitToGame 0.055
+
+template <typename WPMType> inline bool WPM(uintptr_t Address, WPMType Buffer) {
+  if (!Address) {
+    return false;
+  }
+  *(WPMType *)Address = Buffer;
+  return true;
+}
+template <typename RPMType> inline RPMType RPM(uintptr_t Address) {
+  RPMType Buffer = RPMType(); // Initialize Buffer to a default value
+  if (!Address) {
+    return Buffer;
+  }
+  Buffer = *(RPMType *)Address;
+  return Buffer;
+}
+
+
 /*DummyField*/
 #define structoffset_DummyFields_PlayerID 0x300
 #define structoffset_DummyFields_CharacterID 0x304
@@ -17,6 +36,9 @@
 #define structoffset_DummyFields_gravity 0xAC
 #define structoffset_DummyFields_UID 0x10
 /*SYBO_Subway_Characters_Character_o也继承base*/
+
+#define structOffset_BindWeChatManager_fields_loginshield 0x11
+#define structOffset_BindWeChatManager_fields_payshield 0x20
 
 struct UnityEngine_Vector3_Fields {
   float x;
@@ -377,6 +399,35 @@ struct System_Collections_Generic_Dictionary_int__Dummy__o {
   void *klass;
   void *monitor;
   System_Collections_Generic_Dictionary_int__Dummy__Fields fields;
+};
+
+struct PhotonPlayer_Fields // sizeof=0x30
+{                          // XREF: PhotonPlayer_o/r
+  int32_t actorID;
+  char pad0[4];
+  struct System_String_o *nameField;
+  struct System_String_o *_UserId_k__BackingField;
+  bool IsLocal;
+  bool _IsInactive_k__BackingField;
+  char pad1[6];
+  void *_CustomProperties_k__BackingField; // struct
+                                           // ExitGames_Client_Photon_Hashtable_o
+                                           // *
+  void *TagObject; // Il2CppObject *
+};
+
+struct PhotonPlayer_o // sizeof=0x40
+{
+  void *klass; // PhotonPlayer_c *
+  void *monitor;
+  PhotonPlayer_Fields fields;
+};
+struct PhotonPlayer_array // 只能用指针！ sizeof=0x80018
+{
+  Il2CppObject obj;
+  Il2CppArrayBounds *bounds;
+  il2cpp_array_size_t max_length;
+  PhotonPlayer_o *m_Items[10];
 };
 
 inline std::vector<uint64_t>

@@ -14,6 +14,7 @@ using namespace std;
 
 void LoadMenu();
 void SetStyles();
+void SetRigelStyle();
 void ESP();
 extern ImVec2 MenuOrigin;
 extern ImVec2 MenuSize;

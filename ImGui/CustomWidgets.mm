@@ -18,7 +18,7 @@ void LightTheme() {
   int lightIconChild[3] = {248, 252, 255};
   int lightInactiveText[3] = {123, 133, 146};
   int lightActiveText[3] = {255, 106, 106};
-  int lightGrabColor[3] = {210, 210, 210};
+  int lightGrabColor[3] = {210, 210, 210};//拖动条
 
   int darkBG[3] = {17, 17, 19};
   int darkChild[3] = {22, 21, 26};

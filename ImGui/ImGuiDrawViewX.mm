@@ -247,12 +247,13 @@ extern MenuInteraction *menuTouchView;
     ImGui_ImplMetal_NewFrame(renderPassDescriptor);
     ImGui::NewFrame();
     SetStyles();
+    // SetRigelStyle();
     if (menuVisible || !Config::加载一次参数) {
 
-      ImGui::Begin(WATERMARK, NULL,
-                   ImGuiWindowFlags_NoResize |
-                       ImGuiWindowFlags_NoSavedSettings |
-                       ImGuiWindowFlags_NoCollapse);
+      ImGui::Begin(
+          WATERMARK, NULL,
+          ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings |
+              ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
       MenuOrigin = ImGui::GetWindowPos();
       MenuSize = ImGui::GetWindowSize();
       LoadMenu();

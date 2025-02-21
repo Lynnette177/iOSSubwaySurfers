@@ -301,7 +301,7 @@ void Submenu3_Server(std::map<std::string, bool> &childVisibilityMap,
   SimpleToggleButton(childVisibilityMap, ICON_FA_PLUG, u8"滑板自动充能",
                      &Config ::自动充能, isPage, "开启后滑板能量自动增加",
                      shouldLoad);
-  SimpleToggleButton(childVisibilityMap, ICON_FA_PLUG, u8"自动使用滑板",
+  SimpleToggleButton(childVisibilityMap, ICON_FA_ROBOT, u8"自动使用滑板",
                      &Config ::自动使用滑板, isPage,
                      "开启后根据其他玩家的位置，自动使用滑板。可以自定义距离，"
                      "当游戏进度大于11%"
@@ -320,6 +320,11 @@ void Submenu3_Server(std::map<std::string, bool> &childVisibilityMap,
                      shouldLoad);
   SimpleToggleButton(childVisibilityMap, ICON_FA_TACHOMETER_ALT, u8"修改速度",
                      &Config ::修改速度, isPage, "开启后，在PVP中修改人物速度",
+                     shouldLoad);
+  SimpleToggleButton(childVisibilityMap, ICON_FA_CHECK_CIRCLE, u8"防作弊",
+                     &Config ::防作弊合法化, isPage,
+                     "开启后PVP如果跑得太快，超过了会被判定作弊的阈值，就会在终"
+                     "点前停下等到正常再继续",
                      shouldLoad);
 }
 void Submenu4_Settings(std::map<std::string, bool> &childVisibilityMap,
@@ -492,18 +497,19 @@ void ESP() {
   }
 
   for (const auto &entity : Entities) {
-    if (Config::显示方框) {
-      auto Camera = GameFunction::UnityEngine_Camera__get_main(NULL);
-      if (Camera) {
-        UnityEngine_Vector3_o centerPos = entity.TransformPosition;
 
-        float delta_to_me = local_pos.fields.z - centerPos.fields.z;
-        if (delta_to_me < frontest_player_dis_from_me / UnityUnitToGame) {
-          frontest_player_dis_from_me = delta_to_me * UnityUnitToGame;
-        }
+    auto Camera = GameFunction::UnityEngine_Camera__get_main(NULL);
+    if (Camera) {
+      UnityEngine_Vector3_o centerPos = entity.TransformPosition;
 
-        debug_log(@"Position %f %f %f", centerPos.fields.x, centerPos.fields.y,
-                  centerPos.fields.z);
+      float delta_to_me = local_pos.fields.z - centerPos.fields.z;
+      if (delta_to_me < frontest_player_dis_from_me / UnityUnitToGame) {
+        frontest_player_dis_from_me = delta_to_me * UnityUnitToGame;
+      }
+
+      debug_log(@"Position %f %f %f", centerPos.fields.x, centerPos.fields.y,
+                centerPos.fields.z);
+      if (Config::显示方框) {
         UnityEngine_Vector3_o buttom1 =
             centerPos + UnityEngine_Vector3_o(-4, 0, -4);
         UnityEngine_Vector3_o buttom2 =
@@ -606,7 +612,13 @@ void ESP() {
         CustomFunctions::check_and_user_hoverboard_pvp();
       }
     }
-
+    if (Config::防作弊合法化) {
+      if (RunningPercentage >= 99.8f &&
+          (current_runningTime - min_legal_time) < 5) {
+        Config::正在休眠防作弊 = true;
+      } else
+        Config::正在休眠防作弊 = false;
+    }
     if (Config::合法提示) {
       std::sprintf(legalTime_buffer, "最快合法时间:%d秒", min_legal_time);
       std::sprintf(runningTime_buffer, "当前已经用时:%.2f秒",
@@ -624,7 +636,7 @@ void ESP() {
       ImVec2 textSize = ImGui::CalcTextSize(predict_finish_buffer);
       ImVec2 rectSize = ImVec2(textSize.x + 10, textSize.y * 5 + 10);
       ImVec2 rectPos =
-          ImVec2((screenSize.x - rectSize.x * 2) / 2 / Config::screenScale, 20);
+          ImVec2((screenSize.x - rectSize.x * 2) / 2 / Config::screenScale, 60);
       Draw->AddRectFilled(
           rectPos, ImVec2(rectPos.x + rectSize.x, rectPos.y + rectSize.y),
           IM_COL32(0, 0, 0, 150), 4);

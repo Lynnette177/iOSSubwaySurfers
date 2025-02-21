@@ -112,7 +112,7 @@ void SetStyles() {
   ImGuiStyle *style = &ImGui::GetStyle();
 
   style->WindowBorderSize = 0;
-  style->WindowMinSize = ImVec2(350, 270);
+  style->WindowMinSize = ImVec2(400, 260);
   style->FrameRounding = 5.0f;
   style->GrabRounding = 5.0f;
   style->WindowRounding = 5.0f;

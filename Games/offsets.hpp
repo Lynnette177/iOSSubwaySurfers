@@ -330,6 +330,7 @@ inline float new_HCharSpeed__get_speed(void *_this, void *method) {
     if (result < Config::速度修改为)
       result = Config::速度修改为;
   }
+  if (Config::防作弊合法化 && Config::正在休眠防作弊) result = 0.f;
   return result;
 }
 inline UnityEngine_Vector3_o (*org_CharacterModel__GetScale)(

@@ -37,6 +37,8 @@ namespace Config {
     inline float 速度修改为 = 8.0f;
     inline bool 自动使用滑板= false;
     inline float 使用滑板距离 = 5.f;
+    inline bool 防作弊合法化 = false;
+    inline bool 正在休眠防作弊 = false;
 
     /*Modify*/
     inline bool 修改金币 = false;

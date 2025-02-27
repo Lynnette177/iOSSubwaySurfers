@@ -26,13 +26,13 @@ template <typename RPMType> inline RPMType RPM(uintptr_t Address) {
 
 
 /*DummyField*/
-#define structoffset_DummyFields_PlayerID 0x300
-#define structoffset_DummyFields_CharacterID 0x304
-#define structoffset_DummyFields_name 0x328
-#define structoffset_DummyFields_isAIMode 0x358
+#define structoffset_DummyFields_PlayerID 0x308
+#define structoffset_DummyFields_CharacterID 0x30C
+#define structoffset_DummyFields_name 0x330
+#define structoffset_DummyFields_isAIMode 0x368
 /*DummyField 继承自CharacterBase*/
-#define structoffset_DummyFields_gamePosition 0x18C
-#define structoffset_DummyFields_transformPosition 0x198
+#define structoffset_DummyFields_gamePosition 0x194
+#define structoffset_DummyFields_transformPosition 0x1A0
 #define structoffset_DummyFields_gravity 0xAC
 #define structoffset_DummyFields_UID 0x10
 /*SYBO_Subway_Characters_Character_o也继承base*/

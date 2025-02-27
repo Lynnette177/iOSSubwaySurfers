@@ -53,42 +53,51 @@ bool InstallHooks() {
     HOOK(hookFunctionAddress_RealPVPManager__get_allRank,
          hooks::new_RealPVPManager__get_allRank,
          hooks::org_RealPVPManager__get_allRank);
+
+    //HOOK(hookFunctionAddress_EncrptUtil__AESEncrypt,
+    //     hooks::new_EncrptUtil__AESEncrypt, hooks::org_EncrptUtil__AESEncrypt);
+
     return true;
   }
   return false;
 }
 
 void patch_at_start() {
-  ONETIMEPATCH(ENCRYPTOFFSET("0x24AE224"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x24D68AC"),
                PATCH_RET0) // 移除SubwayAdManager__ShowSplashAd
-  ONETIMEPATCH(ENCRYPTOFFSET("0x24AE448"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x24D6AD0"),
                PATCH_RET1) // 移除SubwayAdManager__ShowSplashAdClosed
   ONETIMEPATCH(
-      ENCRYPTOFFSET("0x286D9D8"),
+      ENCRYPTOFFSET("0x2886974"),
       PATCH_RET) // 禁用货币反作弊CheatDetectorManager__CurrencyCheatDetect
-  ONETIMEPATCH(ENCRYPTOFFSET("0x286D224"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x28861C0"),
                PATCH_RET) // 禁用CheatDetectorManager__ObscuredDetectorCallback
-  ONETIMEPATCH(ENCRYPTOFFSET("0x286D91C"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x28868B8"),
                PATCH_RET) // 禁用CheatDetectorManager__SpeedHackDetectorCallback
-  ONETIMEPATCH(ENCRYPTOFFSET("0x286D504"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x28864A0"),
                PATCH_RET) // 禁用CheatDetectorManager__ShieldUser
-  ONETIMEPATCH(ENCRYPTOFFSET("0x2E83464"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x2ED5E28"),
                PATCH_RET) // 禁用FrontScreen__UploadCheaterPlayerLog
-  ONETIMEPATCH(ENCRYPTOFFSET("0x33323F8"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x33569B4"),
                PATCH_RET) // 禁用BindWeChatManager__OnLoginShield
-  ONETIMEPATCH(ENCRYPTOFFSET("0x2009D00"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x202B00C"),
                PATCH_RET0) // PlayerInfo__CheckCheaterByDeviceId
-  ONETIMEPATCH(ENCRYPTOFFSET("0x2009E34"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x202B140"),
                PATCH_RET0) // PlayerInfo__CheckCheaterByCoins
-  ONETIMEPATCH(ENCRYPTOFFSET("0x2009F20"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x202B22C"),
                PATCH_RET0) // PlayerInfo__CheckCheaterByKeys
-  ONETIMEPATCH(ENCRYPTOFFSET("0x2F24958"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x2F5D678"),
                PATCH_RET0) // Globals__isCheater
-  ONETIMEPATCH(ENCRYPTOFFSET("0x1F14918"),
+  ONETIMEPATCH(ENCRYPTOFFSET("0x1F34E40"),
                PATCH_RET0) // PVPModuleMgr__get_CheatState
-  ONETIMEPATCH(ENCRYPTOFFSET("0x1F149A0"), PATCH_RET) //PVPModuleMgr__set_CheatState
-  ONETIMEPATCH(ENCRYPTOFFSET("0x353648C"), PATCH_RET0)//OnlineSettings__get_CheckCheatAPP
-  ONETIMEPATCH(ENCRYPTOFFSET("0x35377BC"), PATCH_RET0) //OnlineSettings__get_CheckCheatAccumulate 
+  ONETIMEPATCH(ENCRYPTOFFSET("0x1F34EC8"),
+               PATCH_RET) // PVPModuleMgr__set_CheatState
+  ONETIMEPATCH(ENCRYPTOFFSET("0x3569E9C"),
+               PATCH_RET0) // OnlineSettings__get_CheckCheatAPP
+  ONETIMEPATCH(ENCRYPTOFFSET("0x356B1CC"),
+               PATCH_RET0) // OnlineSettings__get_CheckCheatAccumulate
+  ONETIMEPATCH(ENCRYPTOFFSET("0x2C94884"),
+               PATCH_RET0) // AdditionManager__CheckDefenseCheat
 }
 
 void Initialize() { //[menu setFrameworkName:EXCUTABLENAME];

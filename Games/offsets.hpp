@@ -8,79 +8,80 @@
 #include <string>
 #include <type_traits>
 
-#define offset_SuperRunVIPManager__IsActive ENCRYPTOFFSET("0x24BB334")
+#define offset_SuperRunVIPManager__IsActive ENCRYPTOFFSET("0x24E3A7C")
 #define offset_IDreamSky_BagManager$$IsUnlockedCharacter                       \
-  ENCRYPTOFFSET("0x3065DF8")
-#define offset_PlayerInfo__isHoverboardUnlockedm ENCRYPTOFFSET("0x1FBF558")
+  ENCRYPTOFFSET("0x30A2D74")
+#define offset_PlayerInfo__isHoverboardUnlockedm ENCRYPTOFFSET("0x1FE0864")
 #define offset_IDreamSky_BagManager__IsUnlockedCharacterTheme                  \
-  ENCRYPTOFFSET("0x30660F8")
+  ENCRYPTOFFSET("0x30A3074")
 #define offset_CharacterStickerManager__isCharacterUnlocked                    \
-  ENCRYPTOFFSET("0x250D6D0")
-#define offset_PlayerInfo__IsOrnamentUnlocked ENCRYPTOFFSET("0x1FE5018")
-#define offset_HPFXBase___DefenseCheck ENCRYPTOFFSET("0x2F4BD4C")
-#define offset_SubwayAdManager__VideoFailed ENCRYPTOFFSET("0x24AE11C")
+  ENCRYPTOFFSET("0x262770C")
+#define offset_PlayerInfo__IsOrnamentUnlocked ENCRYPTOFFSET("0x2006324")
+#define offset_HPFXBase___DefenseCheck ENCRYPTOFFSET("0x2F852D0")
+#define offset_SubwayAdManager__VideoFailed ENCRYPTOFFSET("0x24D67A4")
 #define offset_SYBO_Subway_Utilities_DebugSettings__get_IsAllowed              \
-  ENCRYPTOFFSET("0x2342988")
+  ENCRYPTOFFSET("0x2367344")
 #define offset_SYBO_Subway_Utilities_DebugSettings__get_CharacterInvincible    \
-  ENCRYPTOFFSET("0x2342B74")
-#define offset_AntiAddictionManager_HasVerifid ENCRYPTOFFSET("0x2EA0058")
-#define offset_ReportPlayerManager__CanReportPlayer ENCRYPTOFFSET("0x2142CD0")
+  ENCRYPTOFFSET("0x2367530")
+#define offset_AntiAddictionManager_HasVerifid ENCRYPTOFFSET("0x2EBCC84")
+#define offset_ReportPlayerManager__CanReportPlayer ENCRYPTOFFSET("0x21684BC")
 #define offset_ReportPlayerManager__ReportPlayerManager__CanShowReportPlayer   \
-  ENCRYPTOFFSET("0x2142DD8")
-#define offset_PlayerInfo__get_ReportPlayerDayTimes ENCRYPTOFFSET("0x1FF19E0")
+  ENCRYPTOFFSET("0x21685C4")
+#define offset_PlayerInfo__get_ReportPlayerDayTimes ENCRYPTOFFSET("0x2012CEC")
 
 #define hookFunctionAddress_PlayerInfo__set_amountOfCoins_Address              \
-  ENCRYPTOFFSET("0x1FABA74")
+  ENCRYPTOFFSET("0x1FCCD80")
 #define hookFunctionAddress_PlayerInfo__set_amountOfKeys_Address               \
-  ENCRYPTOFFSET("0x1FABD88")
+  ENCRYPTOFFSET("0x1FCD094")
 #define hookFunctionAddress_GameStats__set_score_Address                       \
-  ENCRYPTOFFSET("0x2EF197C")
+  ENCRYPTOFFSET("0x2F2A5E4")
 #define hookFunctionAddress_HPowerupEnergy___TriggerIn_Address                 \
-  ENCRYPTOFFSET("0x2F6B370")
+  ENCRYPTOFFSET("0x2FA6E88")
 #define hookFunctionAddress_HCharSpeed___ChangeState_Address                   \
-  ENCRYPTOFFSET("0x2F348D8")
-#define hookFunctionAddress_HCharSpeed__get_speed ENCRYPTOFFSET("0x2F3451C")
+  ENCRYPTOFFSET("0x2F6DA78")
+#define hookFunctionAddress_HCharSpeed__get_speed ENCRYPTOFFSET("0x2F6D42C")
 #define hookFunctionAddress_CharacterModel__GetScale_Address                   \
-  ENCRYPTOFFSET("0x22bd2bc")
+  ENCRYPTOFFSET("0x23C635C")
 #define hookFunctionAddress_UnityEngine_Transform__set_position_Address        \
-  ENCRYPTOFFSET("0x435722C")
+  ENCRYPTOFFSET("0x43744F0")
 #define hookFunctionAddress_HRealPVPRoomManager__CommitGameChat_Address        \
-  ENCRYPTOFFSET("0x2F8C5DC")
+  ENCRYPTOFFSET("0x2FC9C50")
 #define hookFunctionAddress_SYBO_Subway_Characters_Character__ApplyGravity     \
-  ENCRYPTOFFSET("0x224154C")
+  ENCRYPTOFFSET("0x22648FC")
 #define hookFunctionAddress_PlayerInfo__get_playerNickName                     \
-  ENCRYPTOFFSET("0x1FC77D8")
+  ENCRYPTOFFSET("0x1FE8AE4")
 #define hookFunctionAddress_ReportPlayerManager__ReportPlayer                  \
-  ENCRYPTOFFSET("0x2142A20")
+  ENCRYPTOFFSET("0x216820C")
 #define hookFunctionAddress_RealPVPManager__get_allRank                        \
-  ENCRYPTOFFSET("0x1F52D2C")
+  ENCRYPTOFFSET("0x20E29FC")
 #define hookFunctionAddress_PartyPvpManager__get_allRank                       \
-  ENCRYPTOFFSET("0x20BFF90")
+  ENCRYPTOFFSET("0x1F73D80")
+#define hookFunctionAddress_EncrptUtil__AESEncrypt ENCRYPTOFFSET("0x2E37D18")
 
 namespace FunctionAddress {
-inline uintptr_t HPowerupManager__get_instance_funcaddr = 0x2F5747C;
-inline uintptr_t HPowerupManager__IncEnergy_funcaddr = 0x2F6B8F4;
-inline uintptr_t HPowerupManager__CanReleaseEnergy_addr = 0x2F6FA0C;
-inline uintptr_t HPowerupManager__ReleaseEnergy_addr = 0x2F6FB38;
+inline uintptr_t HPowerupManager__get_instance_funcaddr = 0x2FA7484;
+inline uintptr_t HPowerupManager__IncEnergy_funcaddr = 0x2FA7524;
+inline uintptr_t HPowerupManager__CanReleaseEnergy_addr = 0x2FABB68;
+inline uintptr_t HPowerupManager__ReleaseEnergy_addr = 0x2FABC94;
 
-inline uintptr_t PlayerInfo__set_NewTreasureKey_funcaddr = 0x1fec5f8;
+inline uintptr_t PlayerInfo__set_NewTreasureKey_funcaddr = 0x200D904;
 inline uintptr_t SYBO_Subway_Characters_Character__get_Instance_Addr =
-    0x2235eb4;
+    0x2259264;
 inline uintptr_t SYBO_Subway_Characters_CharacterBase__get_runningTime_addr =
-    0x22478B0;
-inline uintptr_t UnityEngine_Camera__get_main_funcaddr = 0x430BC54;
-inline uintptr_t UnityEngine_Camera__WorldToScreenPoint_addr = 0x430ADD4;
-inline uintptr_t DummyMgr__get_allDummy_addr = 0x2DED138;
-inline uintptr_t DummyMgr__get_Instance_addr = 0x2DECF78;
-inline uintptr_t PhotonNetwork__get_otherPlayers_addr = 0x1F7485C;
-inline uintptr_t PhotonPlayer__get_ID_addr = 0x1f76198;
-inline uintptr_t PhotonPlayer__get_UserId_addr = 0x1f80424;
-inline uintptr_t NetDirector__PostRoom_EndGame_addr = 0x347fec4;
-inline uintptr_t OnlineSettings__get_instance = 0x352F6B8;
-inline uintptr_t OnlineSettings__get_RealPvpCheatTime_addr = 0x353E03C;
-inline uintptr_t PVPModuleMgr__get_Instance_addr = 0x1f14228;
-inline uintptr_t PVPModuleMgr__get_ROUTE_LEGNGTH_addr = 0x1f14180;
-inline uintptr_t BindWeChatManager__get_Instance_addr = 0x3331234;
+    0x226AC60;
+inline uintptr_t UnityEngine_Camera__get_main_funcaddr = 0x4328F18;
+inline uintptr_t UnityEngine_Camera__WorldToScreenPoint_addr = 0x4328098;
+inline uintptr_t DummyMgr__get_allDummy_addr = 0x2E25570;
+inline uintptr_t DummyMgr__get_Instance_addr = 0x2E253B0;
+inline uintptr_t PhotonNetwork__get_otherPlayers_addr = 0x1F95B08;
+inline uintptr_t PhotonPlayer__get_ID_addr = 0x1F97444;
+inline uintptr_t PhotonPlayer__get_UserId_addr = 0x1FA16D0;
+inline uintptr_t NetDirector__PostRoom_EndGame_addr = 0x34B34E0;
+inline uintptr_t OnlineSettings__get_instance = 0x35630C8;
+inline uintptr_t OnlineSettings__get_RealPvpCheatTime_addr = 0x3571B7C;
+inline uintptr_t PVPModuleMgr__get_Instance_addr = 0x1F34750;
+inline uintptr_t PVPModuleMgr__get_ROUTE_LEGNGTH_addr = 0x1F346A8;
+inline uintptr_t BindWeChatManager__get_Instance_addr = 0x33557F0;
 
 inline void initFunctionAddress(uintptr_t base) {
   HPowerupManager__IncEnergy_funcaddr += base;
@@ -111,7 +112,7 @@ inline void initFunctionAddress(uintptr_t base) {
 #define PATCH_RET0 ENCRYPTHEX("00 00 80 D2 C0 03 5F D6")
 #define PATCH_RET1 ENCRYPTHEX("20 00 80 52 C0 03 5F D6")
 #define PATCH_FROM_FAILED_TO_FINSH_ADS                                         \
-  ENCRYPTHEX("C8 FF FF 17") // 这里是跳转到finish的位置
+  ENCRYPTHEX("C8 FF FF 97") // 这里是跳转到finish的位置
 
 namespace GameFunction {
 inline void *(*HPowerupManager__get_instance)(void *method);
@@ -330,7 +331,8 @@ inline float new_HCharSpeed__get_speed(void *_this, void *method) {
     if (result < Config::速度修改为)
       result = Config::速度修改为;
   }
-  if (Config::防作弊合法化 && Config::正在休眠防作弊) result = 0.f;
+  if (Config::防作弊合法化 && Config::正在休眠防作弊)
+    result = 0.f;
   return result;
 }
 inline UnityEngine_Vector3_o (*org_CharacterModel__GetScale)(
@@ -452,5 +454,21 @@ inline int32_t new_RealPVPManager__get_allRank(void *_this, // PartyPvpManager_o
   }
   return result;
 }
-
+inline System_String_o *(*org_EncrptUtil__AESEncrypt)(System_String_o *inStr,
+                                                      System_String_o *key,
+                                                      void *method);
+inline System_String_o *new_EncrptUtil__AESEncrypt(System_String_o *inStr,
+                                                   System_String_o *key,
+                                                   void *method) {
+  size_t blockSize = 100;
+  std::string result_str = inStr->get_utf8_string();
+  size_t length = result_str.length();
+  for (size_t i = 0; i < length; i += blockSize) {
+    std::string block = result_str.substr(i, blockSize);
+    debug_log(@"Crypt:InStr:%s", block.c_str());
+  }
+  
+  debug_log(@"Crypt:AES Key: %s", key->get_utf8_string().c_str());
+  return org_EncrptUtil__AESEncrypt(inStr, key, method);
+}
 } // namespace hooks

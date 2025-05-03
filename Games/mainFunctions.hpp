@@ -33,11 +33,11 @@ inline void mainFunction() {
   Entities = {};
   void *DummyManager = GameFunction::DummyMgr__get_Instance(NULL);
   if (DummyManager) {
-    debug_log(@"DummyManager: %p", DummyManager);
+    //debug_log(@"DummyManager: %p", DummyManager);
     auto DummyDict = GameFunction::DummyMgr__get_allDummy(DummyManager, NULL);
     if (DummyDict) {
       std::vector<uint64_t> dummies = getAllDummy(DummyDict);
-      debug_log(@"Got entities:%d", dummies.size());
+      //debug_log(@"Got entities:%d", dummies.size());
       for (int i = 0; i < dummies.size(); i++) {
         Entity temp_entity;
         temp_entity.address = dummies[i];

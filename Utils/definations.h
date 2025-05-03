@@ -1,6 +1,6 @@
 #pragma once
-#define JAILED  //给越狱的手机编译需要打开这个宏
-//#define DEBUG
+//#define JAILED  //给越狱的手机编译需要打开这个宏
+#define DEBUG
 //#define DUMP_HOOK   //当需要生成修改过的可执行文件 打开这个宏
 #define  EXCUTABLEPATH "Frameworks/UnityFramework.framework/UnityFramework"
 //只用于在非越狱环境下，进行Patch和Hook

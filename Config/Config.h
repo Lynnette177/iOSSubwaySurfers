@@ -19,8 +19,11 @@ namespace Config {
     inline bool 解锁sticker = false;
     inline bool 修改重力 = false;
     inline float 重力修改为 = 200.f;
+    inline bool 始终可以跳跃 = false;
 
     /*PVP*/
+    inline bool 始终拿好道具 = false;
+    inline bool 命中最近目标 = false;
     inline bool 始终举报 = false;
     inline bool 十倍举报 = false;
     inline bool 修改昵称 = false;

@@ -222,8 +222,8 @@ extern MenuInteraction *menuTouchView;
   CGSize screenSize = [UIScreen mainScreen].nativeBounds.size;
   CGFloat screenScale =
       view.window.screen.nativeScale ?: UIScreen.mainScreen.nativeScale;
-  debug_log(@"Screen Size %f %f, Scale: %f", screenSize.width,
-            screenSize.height, screenScale);
+  //debug_log(@"Screen Size %f %f, Scale: %f", screenSize.width,
+  //          screenSize.height, screenScale);
   if (!inited) {
     inited = true;
     hideRecordTextfield.secureTextEntry = StreamerMode;
